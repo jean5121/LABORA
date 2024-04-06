@@ -89,10 +89,12 @@ function alerta_cElementos(){
     });
 }
 
-$(document).ready(function(){+
+$(document).ready(function(){
     $("#tt").click(function(){
     alert("porfis");
     });
+      //// calendario
+      
 ///CONFIRMAR GUARDADO DE BOLETA
     $(function() {
     var total = $('#total').val();

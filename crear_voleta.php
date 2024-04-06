@@ -24,6 +24,8 @@
 <script type="text/javascript">
 
 window.onload = llenarClinicas;
+
+
 </script>
 
 <div class="content-wrapper">
@@ -49,8 +51,13 @@ window.onload = llenarClinicas;
                         </select>
                       </div>
                       <div class="form-group col-3 ">
-                        <label for="exampleInputEmail1">ADELANTO:</label>
-                        <input id="adelanto" style="color:salmon; font-weight: bold;font-size: 20px;" name="adelanto"  required type="number" class="form-control"  value="0" min="0">
+                      <label>Date:</label>
+                        <div class="input-group date" id="reservationdate" data-target-input="nearest">
+                            <input type="text" class="form-control datetimepicker-input" data-target="#reservationdate"/>
+                            <div class="input-group-append" data-target="#reservationdate" data-toggle="datetimepicker">
+                                <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                            </div>
+                        </div>
                       </div>
                       <div class="col-2"></div>
                       <div class="col-3">
@@ -97,3 +104,15 @@ window.onload = llenarClinicas;
     </div>
   </div>  
 </div>
+<script>
+
+$(function () {
+
+  $('#reservationdate').datetimepicker({
+        format: 'L',
+        
+        today: 'Hoy',
+  
+    });
+})
+</script>
