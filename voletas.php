@@ -31,7 +31,7 @@
                     <th>CLINICA</th>
                     <th>FECHA DE PAGO</th>                    
                     <th>ADELANTO</th>
-                    <th>DETALLES</th>
+                    
                   </tr>
                   </thead>
                   <tbody>

@@ -13,10 +13,14 @@ if(isset($_GET['funcion']) && !empty($_GET['funcion'])) {
         case 'llenarClinicas':
             crearClinicas();
             break;
+        case 'llenarOdonto':      
+            crearOdonto();
+            break;
         case 'detalles_pro':
             $cidpro = $_GET['idproduc'];        
             devol_detalles_pruduc($cidpro);
             break;
+        
     }
 }
 
@@ -78,6 +82,20 @@ function crearClinicas(){
         $clinicas.='<option value="'.$row["idclinica"].'">'.$row["nombre_cli"].'</option>';
     }
     echo $clinicas;
+    mysqli_close($con);
+}
+function crearOdonto(){
+    include_once 'conect.php';
+    $con =mysqli_connect($host,$user_db,$contra_db,$db);
+    $query = "SELECT idodontologo,nombre_odo from odontologo where est_odo =1";
+    $respuesta = mysqli_query($con,$query);
+        
+    $odontologos ='<option value="" disabled selected>Elige un Odontologo</option>';
+
+    while ($row = mysqli_fetch_assoc($respuesta)) {
+        $odontologos.='<option value="'.$row["idodontologo"].'">'.$row["nombre_odo"].'</option>';
+    }
+    echo $odontologos;
     mysqli_close($con);
 }
 

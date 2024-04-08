@@ -17,6 +17,10 @@ function llenarClinicas(){
         
         });
 }
+function lanzador(){
+  llenarClinicas();
+  llenar_odontologos();
+}
 
 
 
@@ -89,10 +93,25 @@ function alerta_cElementos(){
     });
 }
 
-$(document).ready(function(){
-    $("#tt").click(function(){
-    alert("porfis");
+function llenar_odontologos(){
+  $.ajax({
+    url: "funciones.php",
+    method: "GET",
+    async: false,
+    data: {funcion: "llenarOdonto"},
+    dataType: "text",
+    success: function(respuesta) {
+    const contenedor = $("#contenedor_odontologo");
+    contenedor.innerHTML=``; 
+    const elemento =respuesta;
+    contenedor.html(elemento);
+    },
+    
     });
+}
+
+$(document).ready(function(){
+    
       //// calendario
       
 ///CONFIRMAR GUARDADO DE BOLETA
