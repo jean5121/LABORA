@@ -1,0 +1,88 @@
+-- phpMyAdmin SQL Dump
+-- version 5.2.1
+-- https://www.phpmyadmin.net/
+--
+-- Servidor: 127.0.0.1
+-- Tiempo de generación: 08-04-2024 a las 02:29:40
+-- Versión del servidor: 10.4.32-MariaDB
+-- Versión de PHP: 8.1.25
+
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+START TRANSACTION;
+SET time_zone = "+00:00";
+
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8mb4 */;
+
+--
+-- Base de datos: `lab`
+--
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `tipo_usuario`
+--
+
+CREATE TABLE `tipo_usuario` (
+  `idtipo_usuario` tinyint(3) UNSIGNED NOT NULL,
+  `ctipouser` varchar(45) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+
+--
+-- Volcado de datos para la tabla `tipo_usuario`
+--
+
+INSERT INTO `tipo_usuario` (`idtipo_usuario`, `ctipouser`) VALUES
+(1, 'ADMINISTRADOR'),
+(2, 'USUARIO'),
+(3, 'aaasdfasdfd'),
+(4, 'aaasdfasdfd'),
+(5, NULL),
+(6, 'entreeee'),
+(7, 'entreeee'),
+(8, 'entreeee'),
+(9, 'entreeee');
+
+INSERT INTO `producto` (`idproducto`, `nombre_pro`, `precio_promedio`, `estado_pro`, `cantidad_material`) VALUES
+(1, 'CORONA/PUENTE METAL CERAMICA', 90, 1, 1.5),
+(2, 'CARILLA DICILICATO', 200, 1, 1.5),
+(3, 'CORONA/PUENTE ZIRCONIO', 270, 1, 1.5),
+(666, 'asdjfjhgh', 270, 0, 1.5);
+
+INSERT INTO `clinica` (`idclinica`, `nombre_cli`, `telefono_cli`, `direccion_cli`, `referencia_cli`, `estado_cli`) VALUES
+(1, 'FELICIUM CLINIC', '985754213', 'JR. Candelaria 452', 'Una esquina antes del tobogan', 1),
+(2, 'VITALY', '987456218', 'AV. TACNA 894 SEGUNDO PISO', 'DENTO DEL EDIFICIO AZUL', 1),
+(666, 'adsfdasf', '985754213', 'sdfasdfasdf', 'asdfasdfd', 1);
+
+INSERT INTO `usuario` (`idusuario`, `nombre_usuario`, `usuario`, `contrasena`, `estado_usu`, `tipo_usuario`) VALUES
+(1, 'Jean Carlos Carrasco Cutisaca', 'admin', 'admin', 1, 1),
+(2, 'juana magdalena', 'juan', '12345', 1, 2);
+
+--
+-- Índices para tablas volcadas
+--
+
+--
+-- Indices de la tabla `tipo_usuario`
+--
+ALTER TABLE `tipo_usuario`
+  ADD PRIMARY KEY (`idtipo_usuario`);
+
+--
+-- AUTO_INCREMENT de las tablas volcadas
+--
+
+--
+-- AUTO_INCREMENT de la tabla `tipo_usuario`
+--
+ALTER TABLE `tipo_usuario`
+  MODIFY `idtipo_usuario` tinyint(3) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+COMMIT;
+
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
