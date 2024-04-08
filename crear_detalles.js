@@ -136,12 +136,12 @@ $(document).ready(function(){
       }).then(function(result) {
         if (result.value) {
           Swal.fire({
-            icon: 'success',
-            title: 'Deleted!',
-            text: '',
-            customClass: {
-              confirmButton: 'btn btn-success'
-            }
+            position: "center",
+            icon: "success",
+            title: "BOLETA GUARDADA!",
+            showConfirmButton: false,
+            timer: 1400
+            
           });
           setTimeout(function() {
             $myForm[0].submit()

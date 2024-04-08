@@ -1,4 +1,17 @@
+<script>
 
+function aa(){
+    alert("aaaaaaaaaaaa");
+    Swal.fire({
+    position: "top-end",
+    icon: "success",
+    title: "Your work has been saved",
+    showConfirmButton: false,
+    timer: 1500
+    }); 
+    alert("bbbbb");
+    }  
+</script>
 <?php 
 if(isset($_REQUEST['contenedor_clinicas'])){
     $IDCLINIC = $_POST['contenedor_clinicas'];
@@ -37,6 +50,11 @@ if(isset($_REQUEST['contenedor_clinicas'])){
     $queryInsert=substr($queryInsert, 0, -1);
     $resp_element =mysqli_query($con,$queryInsert);
     mysqli_close($con);
+
+
+    echo '<script type="text/javascript"> window.location.href="inicio.php?modulo=detalles_boleta&idBole='.$row2['IDMAX'].'";</script>';
+
+
 }
 
     
@@ -47,6 +65,25 @@ if(isset($_REQUEST['contenedor_clinicas'])){
 
 
 <p><?php  //echo $row2['IDMAX']   ?> fasdf</p>
+<button onclick="aa()">aa</button>
+<p>
+    <?php
+    if (isset($_REQUEST['idBole'])) {
+        $IDBOLE= $_GET['idBole'];
+    
+        include_once 'conect.php';
+        $con =mysqli_connect($host,$user_db,$contra_db,$db);
+        $queryBOLE = "SELECT idboleta,fecha_crea,precio_total,estado_pago,estado_entrega,fecha_entrega,idclinica,idusuario_creador,idodontologo from boleta where idboleta = $IDBOLE";
+        $respuesta = mysqli_query($con,$queryBOLE);
+        $row = mysqli_fetch_row($respuesta);
+        echo $row[1];
+    }
+    
+    ?>
+<?php 
+    
 
-<p><?php echo $queryInsert   ?></p>
+?>
+</p>
+
 </div>

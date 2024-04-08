@@ -114,10 +114,7 @@ function devol_detalles_pruduc($idproduc){
     mysqli_close($con);
 }
 
-function subir_voleta_detalles(){
 
-    
-}
 
 
 ?>
