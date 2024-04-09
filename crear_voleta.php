@@ -50,12 +50,12 @@ window.onload = lanzador;
                 <div class="card-body" >
                   <div class="row">
                       <div class="form-group col-3">
-                        <label>SELECCIONAR CLINICA:</label>
+                        <label>CLINICA :</label>
                         <select id="contenedor_clinicas"  name="contenedor_clinicas" required class="form-control select2 select2-success" style="width: 100%;">                         
                         </select>
                       </div>
                       <div class="form-group col-3 ">
-                      <label>Fecha entrega:</label>
+                      <label>FECHA ENTREGA :</label>
                         <div class="input-group date" id="reservationdate" data-target-input="nearest">                       
                             <input type="date" id="f_entrega"  name="f_entrega"  class="form-control">                        
                         </div>
@@ -74,7 +74,7 @@ window.onload = lanzador;
                   </div>
                   <div class="row">
                       <div class="form-group col-3">
-                        <label>SELECCIONAR ODONTOLOGO:</label>
+                        <label>ODONTOLOGO :</label>
                         <select id="contenedor_odontologo"  name="contenedor_odontologo" required class="form-control select2 select2-success" style="width: 100%;">                         
                         </select>
                       </div>

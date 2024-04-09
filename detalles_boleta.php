@@ -214,7 +214,7 @@ if (isset($_REQUEST['idBole'])) {
                     <!-- DIV CONTENEDOR DE PAGOS -->
             <div class="card">
             <div class="card-header border-transparent">
-                <h3 class="card-title">PAGOS</h3>
+                <h3 class="card-title"><b style="color:#28a745;">PAGOS</b></h3>
                 <div class="card-tools">
                 <button type="button" class="btn btn-tool" data-card-widget="collapse">
                     <i class="fas fa-minus"></i>
@@ -225,6 +225,7 @@ if (isset($_REQUEST['idBole'])) {
             <!-- /.card-header -->
             <div class="card-body p-0">
                 <div class="table-responsive">
+                    <?php        ?>
                 <table class="table m-0">
                     <thead>
                     <tr>
