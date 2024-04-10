@@ -1,15 +1,18 @@
 <script>
 
-function aa(){
-    alert("aaaaaaaaaaaa");
+function info_pago(f,h){
+    
     Swal.fire({
-    position: "top-end",
-    icon: "success",
-    title: "Your work has been saved",
-    showConfirmButton: false,
-    timer: 1500
-    }); 
-    alert("bbbbb");
+    title: "<b> "+h+"DETALLES DE PAGO "+f+"  </b>",
+    icon: "info",
+    html: `
+    <b>Se pago el dia: </b>,
+    <a href="#">links</a>,
+    `,
+    showCloseButton: true,
+    showCancelButton: false,
+    focusConfirm: false,
+});
     }  
 </script>
 <?php 
@@ -54,6 +57,8 @@ if(isset($_REQUEST['contenedor_clinicas'])){
 
     echo '<script type="text/javascript"> window.location.href="inicio.php?modulo=detalles_boleta&idBole='.$row2['IDMAX'].'";</script>';
 }
+
+    ////OBTENER DETALLES DE BOLETA
 if (isset($_REQUEST['idBole'])) {
     $IDBOLE= $_GET['idBole'];
 
@@ -118,16 +123,16 @@ if (isset($_REQUEST['idBole'])) {
                     <div class="col-12 col-sm-4">
                     <div class="info-box bg-light">
                         <div class="info-box-content">
-                        <span class="info-box-text text-center text-muted"><b>Fecha de Creacion</b></span>
-                        <span class="info-box-number text-center text-muted mb-0"><b style="color: #28a745;"><?php echo $row['fecha_crea'];?></b></span>
+                        <span class="info-box-text text-center text-muted"><b>FECHA DE CREACION</b></span>
+                        <span class="info-box-number text-center text-muted mb-0"><p style="color: #28a745;font-size: 19px"><?php echo $row['fecha_crea'];?></p></span>
                         </div>
                     </div>
                     </div>
                     <div class="col-12 col-sm-4">
                     <div class="info-box bg-light">
                         <div class="info-box-content">
-                        <span class="info-box-text text-center text-muted"><b>Fecha de Entrega</b></span>
-                        <span class="info-box-number text-center text-muted mb-0"><b style="color: salmon;"><?php echo $row['fecha_entrega'];?></b></span>
+                        <span class="info-box-text text-center text-muted"><b>FECHA DE ENTREGA</b></span>
+                        <span class="info-box-number text-center text-muted mb-0"><p style="color: salmon;font-size: 19px"><?php echo $row['fecha_entrega'];?></p></span>
                         </div>
                     </div>
                     </div>
@@ -135,7 +140,7 @@ if (isset($_REQUEST['idBole'])) {
                     <div class="info-box bg-light" >
                         <div class="info-box-content">
                             <div class="progress-group">
-                                <b>Precio Total</b>
+                                <b>PRECIO TOTAL</b>
                                 <span class="float-right"><b>0</b>/<b style="color: salmon;"><?php echo $row['precio_total'];?></b></span>
                                 <div class="progress progress-sm">
                                 <div class="progress-bar bg-success" style="width: 5%"></div>
@@ -210,48 +215,69 @@ if (isset($_REQUEST['idBole'])) {
                 </div>
                 </div>
 
-                <div class="col-12 col-md-12 col-lg-4 order-1 order-md-2">
+        <div class="col-12 col-md-12 col-lg-4 order-1 order-md-2 ">
                     <!-- DIV CONTENEDOR DE PAGOS -->
+
             <div class="card">
-            <div class="card-header border-transparent">
-                <h3 class="card-title"><b style="color:#28a745;">PAGOS</b></h3>
+                <div class="card-header">
+                <h3 class="card-title">PAGOS</h3>
+
                 <div class="card-tools">
-                <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
                     <i class="fas fa-minus"></i>
-                </button>
+                    </button>
+                </div>
+                </div>
+                <!-- /.card-header -->
+                <?php                   
+                    include_once 'conect.php';
+                    $con =mysqli_connect($host,$user_db,$contra_db,$db);
+                    $queryPAGO = "SELECT fecha_pago, cantidad_pago, u.nombre_usuario, mp.cmedio
+                    FROM pagos p
+                    LEFT JOIN usuario u 	ON u.idusuario = p.idusuario
+                    LEFT JOIN medio_pago mp	on mp.idmedio_pago = p.idmedio_pago
+                    where idvoleta = $IDBOLE ORDER BY fecha_pago DESC;  ";   
+                    $respuestaPAGO = mysqli_query($con,$queryPAGO);                   
+                    ?>
+                <div class="card-body p-0">
+                <?php    
+                    while ($rowPAGOS=mysqli_fetch_assoc($respuestaPAGO)) {
+                        $fecha_hora = $rowPAGOS['fecha_pago'];
+                        $separar = (explode(" ",$fecha_hora));
+                        $fecha = $separar[0];
+                        $hora = $separar[1];
+                        ///
+                        $monto =$rowPAGOS['cantidad_pago'];
+                        $nombre =$rowPAGOS['nombre_usuario']
+                ?>
+                <ul class="products-list product-list-in-card pl-2 pr-2">
+                    <li class="item">
+                    <div class="product-img"> 
+                    <span class="badge badge-dark center" style="font-size:15px"><h7><?php echo $fecha?></h7><br><h7><?php echo $hora?></h7></span>      
+                    </div>
+                    <div class="product-info">
+                        <b onclick="info_pago(<?php echo $monto.',`'.$nombre.'` ' ?>)" class="product-title"><span class="badge badge-info"><?php echo $rowPAGOS['cmedio']?></span>
+                        <span    class="badge badge-success float-right"><h6>S/.<?php echo $rowPAGOS['cantidad_pago']?></h6></span></b>
+                        <span class="product-description">
+                        <?php echo $rowPAGOS['nombre_usuario']?>
+                        </span>
+                    </div>
+                    </li>
+                </ul>
+                <?php    
+                    }
+                    mysqli_close($con);
+                
+                ?>
+                </div>
+                <!-- /.card-body -->
+                <div class="card-footer text-center">
+                <a href="javascript:void(0)" class="uppercase">View All Products</a>
+                </div>
+                <!-- /.card-footer -->
+            </div>
 
-                </div>
-            </div>
-            <!-- /.card-header -->
-            <div class="card-body p-0">
-                <div class="table-responsive">
-                    <?php        ?>
-                <table class="table m-0">
-                    <thead>
-                    <tr>
-                        <th>Fecha</th>
-                        <th>Respo.</th>
-                        <th>Monto</th>                       
-                        <th>Medio</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr>
-                        <td>OR9842</td>
-                        <td>Call of Duty IV</td>
-                        <td><span class="badge badge-success">Shipped</span></td>
-                        <td>a</td>
-                    </tr>                   
-                    </tbody>
-                    </table>
-                </div>
-                <!-- /.table-responsive -->
-            </div>
-            <!-- /.card-body -->
             
-            <!-- /.card-footer -->
-            </div>
-
                 <h3 class="text-primary"><i class="fas fa-paint-brush"></i> AdminLTE va3</h3>
                 <p class="text-muted">Raw denim you probably haven't heard of them jean shorts Austin. Nesciunt tofu stumptown aliqua butcher retro keffiyeh dreamcatcher synth. Cosby sweater eu banh mi, qui irure terr.</p>
                 <br>
@@ -276,9 +302,8 @@ if (isset($_REQUEST['idBole'])) {
                     <a href="#" class="btn btn-sm btn-primary">Add files</a>
                     <a href="#" class="btn btn-sm btn-warning">Report contact</a>
                 </div>
-                </div>
-            </div>
-            </div>
+        </div>
+            
             <!-- /.card-body -->
         </div>
         <!-- /.card -->
