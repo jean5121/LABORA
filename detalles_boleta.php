@@ -29,8 +29,8 @@ if(isset($_REQUEST['contenedor_clinicas'])){
 
     ////INGRESAR DATOS A LA TD BOLETA
     $con =mysqli_connect($host,$user_db,$contra_db,$db);
-    $query = "INSERT INTO boleta (fecha_crea,precio_total,fecha_entrega,idclinica,idusuario_creador,idodontologo) 
-                                VALUES(now(),".$TOTAL.",'".$FECHA_ENTRE."',".$IDCLINIC.",".$iduser.",".$IDODO.")";
+    $query = "INSERT INTO boleta (fecha_crea,precio_total,deuda,fecha_entrega,idclinica,idusuario_creador,idodontologo) 
+                                VALUES(now(),".$TOTAL.",".$TOTAL.",'".$FECHA_ENTRE."',".$IDCLINIC.",".$iduser.",".$IDODO.")";
     $respuesta = mysqli_query($con,$query);
     ////OBTENER EL ID DE LA BOLETA INGRESADA
     $query2 = "SELECT LAST_INSERT_ID() AS IDMAX FROM boleta  WHERE idusuario_creador=".$iduser."";
