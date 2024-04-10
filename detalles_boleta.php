@@ -75,7 +75,15 @@ if (isset($_REQUEST['idBole'])) {
     where idboleta = $IDBOLE";
     $respuesta = mysqli_query($con,$queryBOLE);
     $row = mysqli_fetch_assoc($respuesta);
+
+    ////OBTENER EL CONTADOR DE PAGOS (MONTO TOTAL PAGADO)
+    $queryPAGOTOTAL = "SELECT SUM(cantidad_pago) AS PAGOTOTAL FROM `pagos` WHERE idvoleta  = $IDBOLE";
+    $respuestaPAGOTOTAL = mysqli_query($con,$queryPAGOTOTAL);
+    $rowPAGOTOTAL = mysqli_fetch_assoc($respuestaPAGOTOTAL);
+
+    $porcentaje_calculado = ( 100* $rowPAGOTOTAL['PAGOTOTAL']) /$row['precio_total'];
     mysqli_close($con);
+
 }
 
     
@@ -105,7 +113,7 @@ if (isset($_REQUEST['idBole'])) {
         <!-- Default box -->
         <div class="card">
             <div class="card-header">
-            <h3 class="card-title">Detalles de Boleta</h3>
+            <h3 class="card-title">Detalles de Boleta --<?php  echo $row['estado_pago'];  ?></h3>
 
             <div class="card-tools">
                 <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
@@ -140,13 +148,16 @@ if (isset($_REQUEST['idBole'])) {
                     <div class="info-box bg-light" >
                         <div class="info-box-content">
                             <div class="progress-group">
-                                <b>PRECIO TOTAL</b>
-                                <span class="float-right"><b>0</b>/<b style="color: salmon;"><?php echo $row['precio_total'];?></b></span>
-                                <div class="progress progress-sm">
-                                <div class="progress-bar bg-success" style="width: 5%"></div>
-                                </div>
+                                <b style="font-size: 17px">P. TOTAL</b>
+                                <span class="float-right"><b style="font-size: 19px"><?php echo $rowPAGOTOTAL['PAGOTOTAL']?></b>/<b style="color: salmon;font-size: 21px"><?php echo $row['precio_total'];?></b></span>                   
+                                
+                            </div>                           
+                            <div class="progress progress-sm" style="height: 15px;">
+                                <div class="progress-bar bg-success" style="width: <?php echo $porcentaje_calculado?>%"></div>                            
                             </div>
+                            <small class="text-success mr-1"><i class="fas fa-arrow-up"></i> % <?php echo $porcentaje_calculado?></small>
                         </div>
+                        
                     </div>
                     </div>
                 </div>
