@@ -149,7 +149,7 @@ if (isset($_REQUEST['idBole'])) {
                         <div class="info-box-content">
                             <div class="progress-group">
                                 <b style="font-size: 17px">P. TOTAL</b>
-                                <span class="float-right"><b style="font-size: 19px"><?php echo $rowPAGOTOTAL['PAGOTOTAL']?></b>/<b style="color: salmon;font-size: 21px"><?php echo $row['precio_total'];?></b></span>                   
+                                <span class="float-right"><b style="font-size: 19px"><?php echo $rowPAGOTOTAL['PAGOTOTAL']??0 ?></b>/<b style="color: salmon;font-size: 21px"><?php echo $row['precio_total'];?></b></span>                   
                                 
                             </div>                           
                             <div class="progress progress-sm" style="height: 15px;">
