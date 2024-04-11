@@ -112,9 +112,15 @@ if (isset($_REQUEST['idBole'])) {
 
         <!-- Default box -->
         <div class="card">
-            <div class="card-header">
+            <div class="card-header ">
             <h3 class="card-title">Detalles de Boleta --<?php  echo $row['estado_pago'];  ?></h3>
-
+            <div class="btn-group row" role="group" aria-label="Botones">
+            <input type="text" class="col-2" value="aaaa">
+            <input type="text" class="col-3" value="bbb">
+            </div>
+    
+                <!-- /.info-box-content -->
+            
             <div class="card-tools">
                 <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
                 <i class="fas fa-minus"></i>
@@ -155,9 +161,9 @@ if (isset($_REQUEST['idBole'])) {
                             <div class="progress progress-sm" style="height: 15px;">
                                 <div class="progress-bar bg-success" style="width: <?php echo $porcentaje_calculado?>%"></div>                            
                             </div>
-                            <small class="text-success mr-1"><i class="fas fa-arrow-up"></i> % <?php echo $porcentaje_calculado?></small>
+                            <small class="text-success mr-1"><i class="fas fa-caret-up"></i> % <?php echo $porcentaje_calculado?></small>
                         </div>
-                        
+                    
                     </div>
                     </div>
                 </div>
@@ -268,7 +274,7 @@ if (isset($_REQUEST['idBole'])) {
                     </div>
                     <div class="product-info">
                         <b onclick="info_pago(<?php echo $monto.',`'.$nombre.'` ' ?>)" class="product-title"><span class="badge badge-info"><?php echo $rowPAGOS['cmedio']?></span>
-                        <span    class="badge badge-success float-right"><h6>S/.<?php echo $rowPAGOS['cantidad_pago']?></h6></span></b>
+                        <span    class="badge badge-success float-right"><h6>S/ <?php echo $rowPAGOS['cantidad_pago']?></h6></span></b>
                         <span class="product-description">
                         <?php echo $rowPAGOS['nombre_usuario']?>
                         </span>
