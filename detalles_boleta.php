@@ -1,13 +1,14 @@
 <script>
 
-function info_pago(f,h){
+function info_pago(monto,nombre,medio,fecha,hora){
     
+    var color_succes = "style=color:#28a745";
     Swal.fire({
-    title: "<b> "+h+"DETALLES DE PAGO "+f+"  </b>",
+    title: "<p>S/.<b style='color:salmon'>"+monto+"</b> Se cobro el dia <a "+color_succes+">"+fecha+"</a> a las <a "+color_succes+">"+hora+"</a>, en "+medio+"</p>",
     icon: "info",
     html: `
-    <b>Se pago el dia: </b>,
-    <a href="#">links</a>,
+    <b>COBRADO POR:  </b><br>
+    <b>`+nombre+`</b>
     `,
     showCloseButton: true,
     showCancelButton: false,
@@ -82,6 +83,7 @@ if (isset($_REQUEST['idBole'])) {
     $rowPAGOTOTAL = mysqli_fetch_assoc($respuestaPAGOTOTAL);
 
     $porcentaje_calculado = ( 100* $rowPAGOTOTAL['PAGOTOTAL']) /$row['precio_total'];
+    $porcentaje_calculado = round($porcentaje_calculado, 0);
     mysqli_close($con);
 
 }
@@ -94,15 +96,11 @@ if (isset($_REQUEST['idBole'])) {
     <section class="content-header">
         <div class="container-fluid">
             <div class="row mb-2">
-                <div class="col-sm-1">
-                    <span class="badge badge-warning"><h5>C-<?php echo $row['idboleta'];?></h5></span>
-                </div>
-            <div class="col-sm-5">
-            <span class="badge badge-success"><h5><?php echo $row['nombre_odo'];?></H5></span>
-            </div>
-            <div class="col-sm-5">
-            <span class="badge badge-success"><h5><?php echo $row['nombre_cli'];?></H5></span>
-            </div>
+                <ul class="list-inline">
+                    <li class="list-inline-item"><span class="badge badge-warning"><h5>C-<?php echo $row['idboleta'];?></h5></span></li>
+                    <li class="list-inline-item"><h5>Clinica: <?php echo $row['nombre_cli'];?></H5></li>
+                    <li class="list-inline-item"><h5><span>Odontologo: </span><?php echo $row['nombre_odo'];?></H5></li>
+                </ul>    
             </div>
         </div><!-- /.container-fluid -->
         </section>
@@ -273,7 +271,7 @@ if (isset($_REQUEST['idBole'])) {
                     <span class="badge badge-dark center" style="font-size:15px"><h7><?php echo $fecha?></h7><br><h7><?php echo $hora?></h7></span>      
                     </div>
                     <div class="product-info">
-                        <b onclick="info_pago(<?php echo $monto.',`'.$nombre.'` ' ?>)" class="product-title"><span class="badge badge-info"><?php echo $rowPAGOS['cmedio']?></span>
+                        <b onclick="info_pago(<?php echo $monto.',`'.$nombre.'`,`'.$rowPAGOS['cmedio'].'`,`'.$fecha.'`,`'.$hora.'` ' ?>)" class="product-title"><span class="badge badge-info"><?php echo $rowPAGOS['cmedio']?></span>
                         <span    class="badge badge-success float-right"><h6>S/ <?php echo $rowPAGOS['cantidad_pago']?></h6></span></b>
                         <span class="product-description">
                         <?php echo $rowPAGOS['nombre_usuario']?>
