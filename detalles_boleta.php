@@ -110,13 +110,19 @@ if (isset($_REQUEST['idBole'])) {
 
         <!-- Default box -->
         <div class="card">
-            <div class="card-header ">
-            <h3 class="card-title">Detalles de Boleta --<?php  echo $row['estado_pago'];  ?></h3>
-            <div class="btn-group row" role="group" aria-label="Botones">
-            <input type="text" class="col-2" value="aaaa">
-            <input type="text" class="col-3" value="bbb">
-            </div>
-    
+            <div class="card-header">
+            <ul class="list-group list-group-horizontal gap-2">
+                <?php    
+                $mensaje_estpago    = ($row['estado_pago']==1) ? 'PAGADO' : 'NO PAGADO';
+                $color_estpago      = ($row['estado_pago']==1) ? '#28a745' : 'salmon';
+                
+                ?>
+                <li class="list-group-item" style="color:<?php echo $color_estpago; ?>;border: 2px solid <?php echo $color_estpago; ?> ;"><i class="fa-solid fa-inbox fa-lg me-3"></i><?php echo $mensaje_estpago ?> </li>
+                <li class="list-group-item">Second item</li>
+                <li class="list-group-item">Third item</li>
+                <li class="list-group-item list-group-item-success">A simple warning list group item</li>
+            </ul>
+            
                 <!-- /.info-box-content -->
             
             <div class="card-tools">
