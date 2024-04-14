@@ -1,5 +1,4 @@
 
-
 function llenarClinicas(){
     
     $.ajax({
@@ -92,7 +91,15 @@ function alerta_cElementos(){
     timer: 1500
     });
 }
+////ALERTA INGRESAR PAGOS
+function alert_est_pago(){
+    Swal.fire({
+    icon: "warning",
+    title:"Para cancelar, <b style='color:salmon'>Ingresar pagos.</b>",
+    });
+}
 
+////(AJAX) LLAMAR PHP PARA LLAMAR ODONTOLOGOS
 function llenar_odontologos(){
   $.ajax({
     url: "funciones.php",
@@ -109,11 +116,99 @@ function llenar_odontologos(){
     
     });
 }
-
-$(document).ready(function(){
+  ////INFORMACION DE PAGO
+function info_pago(monto,nombre,medio,fecha,hora){
     
-      //// calendario
+      var color_succes = "style=color:#28a745";
+      Swal.fire({
+      title: "<p>S/.<b style='color:salmon'>"+monto+"</b> Se cobro el dia <a "+color_succes+">"+fecha+"</a> a las <a "+color_succes+">"+hora+"</a>, en "+medio+"</p>",
+      icon: "info",
+      html: `
+      <b>COBRADO POR:  </b><br>
+      <b>`+nombre+`</b>
+      `,
+      showCloseButton: true,
+      showCancelButton: false,
+      focusConfirm: false,
+    });
+  }  
+
+
+  /////LOG OUT (CONFIMACION)
+function cerrar_sesion(id) {
+  Swal.fire({
+          title: "¿Cerrar sesion?",
+          icon: "warning",
+          dangerMode: 0,
+          showDenyButton: true,
+          showCancelButton: 0,
+          showCloseButton: true,
+          confirmButtonColor: '#28a745',
+          confirmButtonText: "SI",
+          denyButtonText: `No`
+      })
+      .then((result) => {
+/* Read more about isConfirmed, isDenied below */
+          if (result.isConfirmed) {
+            ajax_log_out();
+          } else if (result.isDenied) {
+              
+          }
+      });
+  }
+
+  function ajax_log_out(){
+    $.ajax({
+      url: "funciones.php",
+      method: "GET",
+      async: false,
+      data: {funcion: "salir"},
+      dataType: "text",
+      success: function(respuesta) {
+        window.location.href="index.php"
+      },
       
+      });
+  }
+/////CAMBIAR ESTADO ENVIO (CONFIMACION)
+function confirmar_envio(id) {
+  Swal.fire({
+          title: "¿Marcar como entregado?",
+          html: "<b style='color:salmon'>¡NO se podrá revertir el cambio!</b>",
+          icon: "warning",
+          dangerMode: true,
+          showDenyButton: true,
+          showCancelButton: 0,
+          showCloseButton: true,
+          confirmButtonText: "ACEPTAR",
+          denyButtonText: `No`
+      })
+      .then((result) => {
+/* Read more about isConfirmed, isDenied below */
+          if (result.isConfirmed) {
+            ajax_cambio_est_envio(id)
+              
+          } else if (result.isDenied) {
+              
+          }
+      });
+  }
+
+function ajax_cambio_est_envio(ide){
+
+  $.ajax({
+    url: "funciones.php",
+    method: "GET",
+    async: false,
+    data: {funcion: "cambio_estenvio",cod:ide},
+    dataType: "text",
+    success: function(respuesta) {
+      window.location.href="inicio.php?modulo=detalles_boleta&idBole="+ide
+    },
+    
+    });
+}
+
 ///CONFIRMAR GUARDADO DE BOLETA
     $(function() {
     var total = $('#total').val();
@@ -152,4 +247,6 @@ $(document).ready(function(){
     });
 });
 
-});
+
+
+

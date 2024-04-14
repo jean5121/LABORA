@@ -40,8 +40,13 @@
   <!-- summernote -->
   <link rel="stylesheet" href="plugins/summernote/summernote-bs4.min.css">
 </head>
+
+
+
 <body class="hold-transition sidebar-mini layout-fixed  dark-mode">
+
 <div class="wrapper">
+<script src="plugins/jquery/jquery.min.js"></script>
 
   <!-- Preloader -->
   <div class="preloader flex-column justify-content-center align-items-center">
@@ -56,7 +61,7 @@
         <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
       </li>
       <li class="nav-item d-none d-sm-inline-block">
-        <a href="index3.html" class="nav-link">Home</a>
+        <a href="inicio.php?modulo=voletas" class="nav-link">INICIO</a>
       </li>
     </ul>
 
@@ -65,25 +70,52 @@
       <!-- Navbar Search -->
       <!-- Messages Dropdown Menu -->
       <!-- Notifications Dropdown Menu -->
+      <?php 
+      include_once 'conect.php';
+      $con =mysqli_connect($host,$user_db,$contra_db,$db);
+      $query = "SELECT  entregas_hoy.cantidad_entregas AS hoy,
+                        entregas_manana.cantidad_entregas AS manana,
+                        entregas_pasado_manana.cantidad_entregas AS pasado_manana
+                  FROM 
+                      (SELECT COUNT(*) AS cantidad_entregas FROM boleta WHERE fecha_entrega = CURDATE() AND estado_entrega=0) AS entregas_hoy
+                  JOIN 
+                      (SELECT COUNT(*) AS cantidad_entregas FROM boleta WHERE fecha_entrega = DATE_ADD(CURDATE(), INTERVAL 1 DAY) AND estado_entrega=0) AS entregas_manana
+                  JOIN 
+                      (SELECT COUNT(*) AS cantidad_entregas FROM boleta WHERE fecha_entrega = DATE_ADD(CURDATE(), INTERVAL 2 DAY) AND estado_entrega=0) AS entregas_pasado_manana;";
+      $respuesta = mysqli_query($con,$query);
+      $row = mysqli_fetch_assoc($respuesta);
+      $tot_3dias = $row['hoy']+$row['manana']+$row['pasado_manana'];
+      mysqli_close($con);
+      ?>
       <li class="nav-item dropdown">
         <a class="nav-link" data-toggle="dropdown" href="#">
-          <i class="far fa-bell"></i>
-          <span class="badge badge-warning navbar-badge">15</span>
+          <i class="far fa-bell" style="font-size: 32px;"></i>
+          <span class="badge badge-warning navbar-badge"><b style="font-size:17px ;"><?php echo $tot_3dias ?></b></span>
         </a>
         <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
-          <span class="dropdown-item dropdown-header">15 Notifications</span>
+          <span class="dropdown-item dropdown-header"><b style="color: salmon;font-size:17px"><?php echo $tot_3dias ?></b> PENDIENTES</span>
           <div class="dropdown-divider"></div>
           <a href="#" class="dropdown-item">
-            <i class="fas fa-envelope mr-2"></i> 4 new messages
-            <span class="float-right text-muted text-sm">3 mins</span>
+            <i class="fas fa-hammer mr-2"></i> <?php echo $row['hoy']?> por entregar
+            <span class="float-right text-muted text-sm">hoy</span>
+          </a>
+          <div class="dropdown-divider"></div>
+          <a href="#" class="dropdown-item">
+            <i class="fas fa-briefcase mr-2"></i> <?php echo $row['manana']?> por entregar
+            <span class="float-right text-muted text-sm">Mañana</span>
+          </a>
+          <div class="dropdown-divider"></div>
+          <a href="#" class="dropdown-item">
+            <i class="fas fa-tooth mr-2"></i> <?php echo $row['pasado_manana']?> por entregar
+            <span class="float-right text-muted text-sm">Pasado Mañana </span>
           </a>
         </div>
       </li>
       
       <li class="nav-item">
-        <a class="nav-link nav-icon " href="#" role="button">
-          <i style="color:orangered;" class="fas">
-          <svg width="19" height="19" fill="currentColor" class="bi bi-escape" viewBox="0 0 16 16">
+        <a class="nav-link nav-icon " onclick="cerrar_sesion()" role="button">
+          <i style="color:salmon;font-size: 34px;" class="fas">
+          <svg width="24" height="24" fill="currentColor" class="bi bi-escape" viewBox="0 0 16 16">
             <path d="M8.538 1.02a.5.5 0 1 0-.076.998 6 6 0 1 1-6.445 6.444.5.5 0 0 0-.997.076A7 7 0 1 0 8.538 1.02"/>
             <path d="M7.096 7.828a.5.5 0 0 0 .707-.707L2.707 2.025h2.768a.5.5 0 1 0 0-1H1.5a.5.5 0 0 0-.5.5V5.5a.5.5 0 0 0 1 0V2.732z"/>
           </svg>
@@ -107,9 +139,6 @@
     <div class="sidebar">
       <!-- Sidebar user panel (optional) -->
       <div class="user-panel mt-3 pb-3 mb-3 d-flex">
-        <div class="image">
-          <img src="dist/img/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image">
-        </div>
         <div class="info">
           <a href="#" class="d-block"><?php echo $_SESSION['ctipo_user'];  ?></a>
           <a href="#" class="d-block"><?php echo $_SESSION['nombre'];  ?></a>

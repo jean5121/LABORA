@@ -111,9 +111,3 @@ window.onload = lanzador;
     </div>
   </div>  
 </div>
-<script>
-
-$(function () {
-
-})
-</script>

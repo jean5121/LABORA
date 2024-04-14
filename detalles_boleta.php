@@ -1,51 +1,6 @@
-<script>
-////INFORMACION DE PAGO
-function info_pago(monto,nombre,medio,fecha,hora){
-    
-    var color_succes = "style=color:#28a745";
-    Swal.fire({
-    title: "<p>S/.<b style='color:salmon'>"+monto+"</b> Se cobro el dia <a "+color_succes+">"+fecha+"</a> a las <a "+color_succes+">"+hora+"</a>, en "+medio+"</p>",
-    icon: "info",
-    html: `
-    <b>COBRADO POR:  </b><br>
-    <b>`+nombre+`</b>
-    `,
-    showCloseButton: true,
-    showCancelButton: false,
-    focusConfirm: false,
-});
-    }  
-    
-function alert_est_pago(){
-    Swal.fire({
-    icon: "warning",
-    title:"Para marcar como cancelado, <b style='color:salmon'>Ingresar pagos.</b>",
-});
-}
 
-function confirmar_envio() {
-    Swal.fire({
-            title: "¿Marcar como entregado?",
-            html: "<b style='color:salmon'>¡No se podra revertir el cambio!</b>",
-            icon: "warning",
-            dangerMode: true,
-            showDenyButton: true,
-            showCancelButton: 0,
-            showCloseButton: true,
-            confirmButtonText: "MARCAR",
-            denyButtonText: `No marcar`
-        })
-        .then((result) => {
-  /* Read more about isConfirmed, isDenied below */
-            if (result.isConfirmed) {
-                Swal.fire("Saved!", "", "success");
-            } else if (result.isDenied) {
-                Swal.fire("Changes are not saved", "", "info");
-            }
-        });
-    }
+<script src="crear_detalles.js"></script>
 
-</script>
 <?php 
 if(isset($_REQUEST['contenedor_clinicas'])){
     $IDCLINIC = $_POST['contenedor_clinicas'];
@@ -95,7 +50,7 @@ if (isset($_REQUEST['idBole'])) {
 
     include_once 'conect.php';
     $con =mysqli_connect($host,$user_db,$contra_db,$db);
-    $queryBOLE = "SELECT idboleta,fecha_crea,precio_total,estado_pago,estado_entrega,fecha_entrega,b.idclinica,b.idusuario_creador,b.idodontologo,
+    $queryBOLE = "SELECT idboleta,fecha_crea,precio_total,estado_pago,deuda,estado_entrega,fecha_entrega,b.idclinica,b.idusuario_creador,b.idodontologo,
 	c.nombre_cli,c.telefono_cli,c.direccion_cli,c.referencia_cli,c.ruc_cli,o.nombre_odo,o.telefono,o.dni_odo,o.ruc_odonto,
     u.nombre_usuario,tu.ctipouser
     FROM boleta b
@@ -116,11 +71,12 @@ if (isset($_REQUEST['idBole'])) {
     $porcentaje_calculado = round($porcentaje_calculado, 0);
     mysqli_close($con);
 
-}
-
-    
+}   
 ?>
 
+<script type="text/javascript">
+
+</script>
 <div class="content-wrapper">
     
     <section class="content-header">
@@ -145,21 +101,31 @@ if (isset($_REQUEST['idBole'])) {
                 <?php    
                 $mensaje_estpago    = ($row['estado_pago']==1) ? ' CANCELADO' : ' NO CANCELADO';
                 $color_estpago      = ($row['estado_pago']==1) ? '#28a745' : 'salmon';
+                $boton_pago      = ($row['estado_pago']==1) ? '' : 'alert_est_pago()';
 
                 $mensaje_estentrega    = ($row['estado_entrega']==1) ? ' ENTREGADO' : ' NO ENTREGADO';
                 $color_estentrega      = ($row['estado_entrega']==1) ? '#28a745' : 'salmon';
-                $boton_entre           = ($row['estado_entrega']==1) ? '' : 'confirmar_envio()';
+                $boton_entre           = ($row['estado_entrega']==1) ? '' : 'confirmar_envio('.$row['idboleta'].')';
+
+                $deuda_pen             = ($row['deuda']>=1) ? ' DEUDA S/.'.$row["deuda"] : 'none';
                 
                 ?>
-                <li onclick="alert_est_pago()" class="list-group-item border-right-0" style="color:<?php echo $color_estpago; ?>;border: 2px solid <?php echo $color_estpago; ?> ;">
+                <li onclick="<?php echo $boton_pago ?>" class="list-group-item border-right-0" style="color:<?php echo $color_estpago; ?>;border: 2px solid <?php echo $color_estpago; ?> ;">
                 <svg viewBox="0 0 512 512" style=" fill:<?php echo $color_estpago; ?>" width="24" height="24"><path d="M320 96H192L144.6 24.9C137.5 14.2 145.1 0 157.9 0H354.1c12.8 0 20.4 14.2 13.3 24.9L320 96zM192 128H320c3.8 2.5 8.1 5.3 13 8.4C389.7 172.7 512 250.9 512 416c0 53-43 96-96 96H96c-53 0-96-43-96-96C0 250.9 122.3 172.7 179 136.4l0 0 0 0c4.8-3.1 9.2-5.9 13-8.4zm84 88c0-11-9-20-20-20s-20 9-20 20v14c-7.6 1.7-15.2 4.4-22.2 8.5c-13.9 8.3-25.9 22.8-25.8 43.9c.1 20.3 12 33.1 24.7 40.7c11 6.6 24.7 10.8 35.6 14l1.7 .5c12.6 3.8 21.8 6.8 28 10.7c5.1 3.2 5.8 5.4 5.9 8.2c.1 5-1.8 8-5.9 10.5c-5 3.1-12.9 5-21.4 4.7c-11.1-.4-21.5-3.9-35.1-8.5c-2.3-.8-4.7-1.6-7.2-2.4c-10.5-3.5-21.8 2.2-25.3 12.6s2.2 21.8 12.6 25.3c1.9 .6 4 1.3 6.1 2.1l0 0 0 0c8.3 2.9 17.9 6.2 28.2 8.4V424c0 11 9 20 20 20s20-9 20-20V410.2c8-1.7 16-4.5 23.2-9c14.3-8.9 25.1-24.1 24.8-45c-.3-20.3-11.7-33.4-24.6-41.6c-11.5-7.2-25.9-11.6-37.1-15l0 0-.7-.2c-12.8-3.9-21.9-6.7-28.3-10.5c-5.2-3.1-5.3-4.9-5.3-6.7c0-3.7 1.4-6.5 6.2-9.3c5.4-3.2 13.6-5.1 21.5-5c9.6 .1 20.2 2.2 31.2 5.2c10.7 2.8 21.6-3.5 24.5-14.2s-3.5-21.6-14.2-24.5c-6.5-1.7-13.7-3.4-21.1-4.7V216z"/></svg>
                 <?php echo $mensaje_estpago ?>
                 </li>
                 
+                <li class="list-group-item border-left-0 border-right-0" style="display:<?php echo $deuda_pen; ?> ; color:<?php echo $color_estpago; ?>;border: 2px solid <?php echo $color_estpago; ?> ;">
+                <svg viewBox="0 0 512 512" style="fill:<?php echo $color_estpago; ?>" width="24" height="24"><path d="M512 80c0 18-14.3 34.6-38.4 48c-29.1 16.1-72.5 27.5-122.3 30.9c-3.7-1.8-7.4-3.5-11.3-5C300.6 137.4 248.2 128 192 128c-8.3 0-16.4 .2-24.5 .6l-1.1-.6C142.3 114.6 128 98 128 80c0-44.2 86-80 192-80S512 35.8 512 80zM160.7 161.1c10.2-.7 20.7-1.1 31.3-1.1c62.2 0 117.4 12.3 152.5 31.4C369.3 204.9 384 221.7 384 240c0 4-.7 7.9-2.1 11.7c-4.6 13.2-17 25.3-35 35.5c0 0 0 0 0 0c-.1 .1-.3 .1-.4 .2l0 0 0 0c-.3 .2-.6 .3-.9 .5c-35 19.4-90.8 32-153.6 32c-59.6 0-112.9-11.3-148.2-29.1c-1.9-.9-3.7-1.9-5.5-2.9C14.3 274.6 0 258 0 240c0-34.8 53.4-64.5 128-75.4c10.5-1.5 21.4-2.7 32.7-3.5zM416 240c0-21.9-10.6-39.9-24.1-53.4c28.3-4.4 54.2-11.4 76.2-20.5c16.3-6.8 31.5-15.2 43.9-25.5V176c0 19.3-16.5 37.1-43.8 50.9c-14.6 7.4-32.4 13.7-52.4 18.5c.1-1.8 .2-3.5 .2-5.3zm-32 96c0 18-14.3 34.6-38.4 48c-1.8 1-3.6 1.9-5.5 2.9C304.9 404.7 251.6 416 192 416c-62.8 0-118.6-12.6-153.6-32C14.3 370.6 0 354 0 336V300.6c12.5 10.3 27.6 18.7 43.9 25.5C83.4 342.6 135.8 352 192 352s108.6-9.4 148.1-25.9c7.8-3.2 15.3-6.9 22.4-10.9c6.1-3.4 11.8-7.2 17.2-11.2c1.5-1.1 2.9-2.3 4.3-3.4V304v5.7V336zm32 0V304 278.1c19-4.2 36.5-9.5 52.1-16c16.3-6.8 31.5-15.2 43.9-25.5V272c0 10.5-5 21-14.9 30.9c-16.3 16.3-45 29.7-81.3 38.4c.1-1.7 .2-3.5 .2-5.3zM192 448c56.2 0 108.6-9.4 148.1-25.9c16.3-6.8 31.5-15.2 43.9-25.5V432c0 44.2-86 80-192 80S0 476.2 0 432V396.6c12.5 10.3 27.6 18.7 43.9 25.5C83.4 438.6 135.8 448 192 448z"/></svg> 
+                <?php echo $deuda_pen ?>
+                </li>
+
                 <li onclick="<?php echo $boton_entre ?>" class="list-group-item border-left-0" style="color:<?php echo $color_estentrega; ?>;border: 2px solid <?php echo $color_estentrega; ?> ;">
                 <svg viewBox="0 0 640 512" style="fill:<?php echo $color_estentrega; ?>" width="30" height="30"><path d="M64 32C28.7 32 0 60.7 0 96V304v80 16c0 44.2 35.8 80 80 80c26.2 0 49.4-12.6 64-32c14.6 19.4 37.8 32 64 32c44.2 0 80-35.8 80-80c0-5.5-.6-10.8-1.6-16H416h33.6c-1 5.2-1.6 10.5-1.6 16c0 44.2 35.8 80 80 80s80-35.8 80-80c0-5.5-.6-10.8-1.6-16H608c17.7 0 32-14.3 32-32V288 272 261.7c0-9.2-3.2-18.2-9-25.3l-58.8-71.8c-10.6-13-26.5-20.5-43.3-20.5H480V96c0-35.3-28.7-64-64-64H64zM585 256H480V192h48.8c2.4 0 4.7 1.1 6.2 2.9L585 256zM528 368a32 32 0 1 1 0 64 32 32 0 1 1 0-64zM176 400a32 32 0 1 1 64 0 32 32 0 1 1 -64 0zM80 368a32 32 0 1 1 0 64 32 32 0 1 1 0-64z"/></svg>
                 <?php echo $mensaje_estentrega ?>
                 </li>
+
+                
                 
             </ul>
             
@@ -205,7 +171,7 @@ if (isset($_REQUEST['idBole'])) {
                             <div class="progress progress-sm" style="height: 15px;">
                                 <div class="progress-bar bg-success" style="width: <?php echo $porcentaje_calculado?>%"></div>                            
                             </div>
-                            <small class="text-success mr-1"><i class="fas fa-caret-up"></i> % <?php echo $porcentaje_calculado?></small>
+                            <small class="text-success mr-1"><i class="fas fa-caret-up"></i> <?php echo $porcentaje_calculado?> % </small>
                         </div>
                     
                     </div>
@@ -236,7 +202,7 @@ if (isset($_REQUEST['idBole'])) {
 
                         <div class="post clearfix">
                         <div class="user-block">
-                            <img class="img-circle img-bordered-sm" src="../../dist/img/user7-128x128.jpg" alt="User Image">
+                            
                             <span class="username">
                             <a href="#">Sarah Ross</a>
                             </span>
@@ -282,7 +248,7 @@ if (isset($_REQUEST['idBole'])) {
             <div class="card">
                 <div class="card-header">
                 <h3 class="card-title">PAGOS</h3>
-
+                
                 <div class="card-tools">
                     <button type="button" class="btn btn-tool" data-card-widget="collapse">
                     <i class="fas fa-minus"></i>
@@ -371,3 +337,4 @@ if (isset($_REQUEST['idBole'])) {
 
         </section>
 </div>
+

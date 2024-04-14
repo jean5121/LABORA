@@ -20,8 +20,23 @@ if(isset($_GET['funcion']) && !empty($_GET['funcion'])) {
             $cidpro = $_GET['idproduc'];        
             devol_detalles_pruduc($cidpro);
             break;
+        case 'cambio_estenvio':
+            $idbo = $_GET['cod'];        
+            cambio_est_envio($idbo);
+            break;
+        case 'salir':        
+            salirphp();
+            break;
         
     }
+}
+
+function cambio_est_envio($id){
+    include_once 'conect.php';
+    $con =mysqli_connect($host,$user_db,$contra_db,$db);
+    $query = "UPDATE boleta SET estado_entrega = 1 WHERE idboleta=$id";
+    $respuesta = mysqli_query($con,$query);
+    mysqli_close($con);
 }
 
 function CrearElements($canti){
@@ -73,7 +88,7 @@ function CrearElements($canti){
 function crearClinicas(){
     include_once 'conect.php';
     $con =mysqli_connect($host,$user_db,$contra_db,$db);
-    $query = "SELECT idclinica,nombre_cli from clinica where estado_cli =1";
+    $query = "SELECT idclinica,nombre_cli from clinica where estado_cli =1 ORDER BY nombre_cli ASC";
     $respuesta = mysqli_query($con,$query);
         
     $clinicas ='<option value="" disabled selected>Elige una clinica</option>';
@@ -87,7 +102,7 @@ function crearClinicas(){
 function crearOdonto(){
     include_once 'conect.php';
     $con =mysqli_connect($host,$user_db,$contra_db,$db);
-    $query = "SELECT idodontologo,nombre_odo from odontologo where est_odo =1";
+    $query = "SELECT idodontologo,nombre_odo from odontologo where est_odo =1 ORDER BY nombre_odo ASC";
     $respuesta = mysqli_query($con,$query);
         
     $odontologos ='<option value="" disabled selected>Elige un Odontologo</option>';
@@ -114,7 +129,10 @@ function devol_detalles_pruduc($idproduc){
     mysqli_close($con);
 }
 
-
+function salirphp(){
+    session_start();
+    session_destroy();
+}
 
 
 ?>

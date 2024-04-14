@@ -1,3 +1,6 @@
+<script src="plugins/jquery/jquery.min.js"></script>
+
+<script src="crear_detalles.js"></script>
 
 <div class="content-wrapper">
     <!-- Content Header (Page header) -->
