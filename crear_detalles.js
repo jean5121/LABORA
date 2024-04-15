@@ -21,6 +21,10 @@ function lanzador(){
   llenar_odontologos();
 }
 
+///LLAMAR AL MODULO CREAR
+function link_crear(){
+  location.href ="inicio.php?modulo=crear";
+}
 
 
 function llenarElementosPHP(n){
@@ -209,6 +213,15 @@ function ajax_cambio_est_envio(ide){
     });
 }
 
+
+///VER DEUDORES
+function aa(){
+      var tabla = $('#example1').DataTable();
+      var valorBusqueda = '5' // Obtener el valor del campo de entrada
+
+      // Aplicar la búsqueda en todas las columnas y redibujar la tabla
+      tabla.search(valorBusqueda).draw();
+}
 ///CONFIRMAR GUARDADO DE BOLETA
     $(function() {
     var total = $('#total').val();

@@ -1,7 +1,13 @@
 <script src="plugins/jquery/jquery.min.js"></script>
-
 <script src="crear_detalles.js"></script>
 
+<style>
+  .dataTables_filter input[type="search"] {
+    border: 1px solid salmon;
+    color: #fff3cd;
+}
+
+</style>
 <div class="content-wrapper">
     <!-- Content Header (Page header) -->
     <section class="content-header">
@@ -22,19 +28,33 @@
       <div class="container-fluid">
         <div class="row">
         
-          <div class="col-10">
+          <div class="col-12">
             <div class="card">
+              <div class="card-header row">
+                <div class="col-md-3">
+                <button type="button" id="btn_no_pagado" onclick="aa()" class="btn btn-danger btn-block">
+                  <i class="fa fa-times-circle"></i> 15 SIN PAGAR</button>
+                </div>
+                <div class="col-md-5">
+                </div>
+                <div class="col-md-4">
+                  <button type="button" onclick="link_crear()" class="btn btn-outline-success btn-block">
+                    <i class="fa fa-file"></i> CREAR VOLETA
+                  </button>
+                </div>
+              </div>
               <!-- /.card-header -->
               <div class="card-body">
                 <table id="example1" class="table table-bordered table-striped">
                   <thead>
                   <tr>
-                    <th>FECHA DE CREACION</th>
-                    <th>PRECIO TOTAL</th>
+                    <th>COD</th>
+                    <th>CREACION</th>
+                    <th>ENTREGA</th>
                     <th>CLINICA</th>
-                    <th>FECHA DE PAGO</th>                    
+                    <th>ODONTOLOG</th>                    
                     <th>ADELANTO</th>
-                    
+                    <th>ESTADO</th>                 
                   </tr>
                   </thead>
                   <tbody>
@@ -44,8 +64,10 @@
                       Explorer 4.0
                     </td>
                     <td>Win 95+</td>
-                    <td> 4</td>
-                    <td>X</td>
+                    <td>CLINICA FELICIUM</td>
+                    <td>JEAN CARLOS CARRASCO CUTISACA</td>
+                    <td>6</td>
+                    <td>A</td>
                   </tr>
                   <tr>
                     <td>Trident</td>
@@ -55,6 +77,8 @@
                     <td>Win 95+</td>
                     <td>5</td>
                     <td>C</td>
+                    <td>6</td>
+                    <td>A</td>
                   </tr>
                   <tr>
                     <td>Trident</td>
@@ -63,6 +87,8 @@
                     </td>
                     <td>Win 95+</td>
                     <td>5.5</td>
+                    <td>A</td>
+                    <td>6</td>
                     <td>A</td>
                   </tr>
                   <tr>
@@ -73,6 +99,8 @@
                     <td>Win 98+</td>
                     <td>6</td>
                     <td>A</td>
+                    <td>6</td>
+                    <td>A</td>
                   </tr>
                   <tr>
                     <td>Trident</td>
@@ -80,11 +108,15 @@
                     <td>Win XP SP2+</td>
                     <td>7</td>
                     <td>A</td>
+                    <td>6</td>
+                    <td>A</td>
                   </tr>
                   <tr>
                     <td>Trident</td>
                     <td>AOL browser (AOL desktop)</td>
                     <td>Win XP</td>
+                    <td>6</td>
+                    <td>A</td>
                     <td>6</td>
                     <td>A</td>
                   </tr>
@@ -96,20 +128,7 @@
             </div>
             <!-- /.card -->
           </div>
-          <div class="col-2">
-              <div class="small-box bg-gradient-danger">
-                  <div class="inner">
-                    <h3>15</h3> 
-                    <p>Voletas sin pagar</p>
-                  </div>
-                  <a href="#" class="small-box-footer">Ver <i class="fas fa-arrow-circle-right"></i></a>
-                </div>
-
-                <div class="btn-toolbar" role="toolbar">
-                    <button type="button" class="btn btn-outline-success" onclick="link_crear()">
-                      <span class="fas fa-file fa-3x"></span> <h4>CREAR VOLETA</h4> 
-                    </button>
-                </div>
+          <div class="col-0">
 
           </div>
 
@@ -123,10 +142,3 @@
     </section>
     <!-- /.content -->
   </div>
-  <script>
-    function link_crear(){
-      location.href ="inicio.php?modulo=crear";
-    }
-
-
-  </script>

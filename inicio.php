@@ -89,7 +89,7 @@
       ?>
       <li class="nav-item dropdown">
         <a class="nav-link" data-toggle="dropdown" href="#">
-          <i class="far fa-bell" style="font-size: 32px;"></i>
+          <i class="far fa-bell" style="font-size: 32px;color:#ffeeba"></i>
           <span class="badge badge-warning navbar-badge"><b style="font-size:17px ;"><?php echo $tot_3dias ?></b></span>
         </a>
         <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
@@ -271,7 +271,7 @@
 <script>
   $(function () {
     $("#example1").DataTable({
-      "responsive": true, "lengthChange": false, "autoWidth": false,
+      "responsive": true, "lengthChange": 1, "autoWidth": 1,
       "buttons": ["excel", "pdf", "print",],
       language: {
         "decimal": "",
@@ -284,7 +284,7 @@
         "lengthMenu": "Mostrar _MENU_ Entradas",
         "loadingRecords": "Cargando...",
         "processing": "Procesando...",
-        "search": "Buscar:",
+        "search": "BUSCAR:",
         "zeroRecords": "Sin resultados encontrados",
         "paginate": {
             "first": "Primero",
@@ -294,9 +294,7 @@
         }
     },
 
-    }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
-
-    
+    }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');   
   });
 
 
