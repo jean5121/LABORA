@@ -6,8 +6,8 @@
     border: 1px solid salmon;
     color: #fff3cd;
 }
-
 </style>
+
 <div class="content-wrapper">
     <!-- Content Header (Page header) -->
     <section class="content-header">
@@ -32,10 +32,12 @@
             <div class="card">
               <div class="card-header row">
                 <div class="col-md-3">
-                <button type="button" id="btn_no_pagado" onclick="aa()" class="btn btn-danger btn-block">
+                <button type="button" id="btn_no_pagado" onclick="dtable_cargar_deudas()" class="btn btn-danger btn-block">
                   <i class="fa fa-times-circle"></i> 15 SIN PAGAR</button>
                 </div>
                 <div class="col-md-5">
+                <button type="button" id="btn_no_pagado" onclick="dtable_cargar_hoy()" class="btn btn-danger btn-block">
+                  <i class="fa fa-times-circle"></i> 15 hoy</button>
                 </div>
                 <div class="col-md-4">
                   <button type="button" onclick="link_crear()" class="btn btn-outline-success btn-block">
@@ -142,3 +144,18 @@
     </section>
     <!-- /.content -->
   </div>
+  <script>
+
+
+// document.addEventListener("DOMContentLoaded", function() {
+//   var variableBusqueda = sessionStorage.getItem('busquedaDataTable');
+// if (variableBusqueda) {
+//   document.getElementById("btn_no_pagado").click();
+//   alert(variableBusqueda);
+// }
+// });
+// Recuperar la variable enviada desde la otra página
+
+
+
+</script>

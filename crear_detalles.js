@@ -213,11 +213,30 @@ function ajax_cambio_est_envio(ide){
     });
 }
 
+function dtable_cargar_pen_hoy(){
+
+  var variableBusqueda = "hoy"; // Este es el valor que quieres enviar
+  sessionStorage.setItem('busquedaDataTable', variableBusqueda);
+  window.location.href = "inicio.php?modulo=voletas";
+  // var variable = "hoy";
+  // var tabla = $('#example1').DataTable();
+  // tabla.search(variable).draw();
+  
+
+}
+///VER HOY
+function dtable_cargar_hoy(){
+  var tabla = $('#example1').DataTable();
+  var valorBusqueda = 'Hoy' // Obtener el valor del campo de entrada
+
+  // Aplicar la búsqueda en todas las columnas y redibujar la tabla
+  tabla.search(valorBusqueda).draw();
+}
 
 ///VER DEUDORES
-function aa(){
+function dtable_cargar_deudas(){
       var tabla = $('#example1').DataTable();
-      var valorBusqueda = '5' // Obtener el valor del campo de entrada
+      var valorBusqueda = 'SIN PAGAR' // Obtener el valor del campo de entrada
 
       // Aplicar la búsqueda en todas las columnas y redibujar la tabla
       tabla.search(valorBusqueda).draw();
@@ -258,6 +277,33 @@ function aa(){
       });
     
     });
+
+
+    $("#example1").DataTable({
+      "responsive": true, "lengthChange": 1, "autoWidth": 1,
+      "buttons": ["excel", "pdf", "print",],
+      language: {
+        "decimal": "",
+        "emptyTable": "No hay información",
+        "info": "Mostrando _START_ a _END_ de _TOTAL_ Entradas",
+        "infoEmpty": "Mostrando 0 to 0 of 0 Entradas",
+        "infoFiltered": "(Filtrado de _MAX_ total entradas)",
+        "infoPostFix": "",
+        "thousands": ",",
+        "lengthMenu": "Mostrar _MENU_ Entradas",
+        "loadingRecords": "Cargando...",
+        "processing": "Procesando...",
+        "search": "BUSCAR:",
+        "zeroRecords": "Sin resultados encontrados",
+        "paginate": {
+            "first": "Primero",
+            "last": "Ultimo",
+            "next": "Siguiente",
+            "previous": "Anterior"
+        }
+    },
+
+    }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)'); 
 });
 
 

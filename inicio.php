@@ -48,7 +48,7 @@
 <div class="wrapper">
 <script src="plugins/jquery/jquery.min.js"></script>
 
-  <!-- Preloader -->
+
   <div class="preloader flex-column justify-content-center align-items-center">
     <img class="animation__shake" src="dist/img/AdminLTELogo.png" alt="AdminLTELogo" height="60" width="60">
   </div>
@@ -95,7 +95,7 @@
         <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
           <span class="dropdown-item dropdown-header"><b style="color: salmon;font-size:17px"><?php echo $tot_3dias ?></b> PENDIENTES</span>
           <div class="dropdown-divider"></div>
-          <a href="#" class="dropdown-item">
+          <a onclick="dtable_cargar_pen_hoy()" class="dropdown-item">
             <i class="fas fa-hammer mr-2"></i> <?php echo $row['hoy']?> por entregar
             <span class="float-right text-muted text-sm">hoy</span>
           </a>
@@ -269,34 +269,6 @@
 <script src="dist/js/pages/dashboard.js"></script>
 
 <script>
-  $(function () {
-    $("#example1").DataTable({
-      "responsive": true, "lengthChange": 1, "autoWidth": 1,
-      "buttons": ["excel", "pdf", "print",],
-      language: {
-        "decimal": "",
-        "emptyTable": "No hay información",
-        "info": "Mostrando _START_ a _END_ de _TOTAL_ Entradas",
-        "infoEmpty": "Mostrando 0 to 0 of 0 Entradas",
-        "infoFiltered": "(Filtrado de _MAX_ total entradas)",
-        "infoPostFix": "",
-        "thousands": ",",
-        "lengthMenu": "Mostrar _MENU_ Entradas",
-        "loadingRecords": "Cargando...",
-        "processing": "Procesando...",
-        "search": "BUSCAR:",
-        "zeroRecords": "Sin resultados encontrados",
-        "paginate": {
-            "first": "Primero",
-            "last": "Ultimo",
-            "next": "Siguiente",
-            "previous": "Anterior"
-        }
-    },
-
-    }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');   
-  });
-
 
 </script>
 </body>
