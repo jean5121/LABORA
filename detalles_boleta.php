@@ -101,7 +101,7 @@ if (isset($_REQUEST['idBole'])) {
                 <?php    
                 $mensaje_estpago    = ($row['estado_pago']==1) ? ' CANCELADO' : ' NO CANCELADO';
                 $color_estpago      = ($row['estado_pago']==1) ? '#28a745' : 'salmon';
-                $boton_pago      = ($row['estado_pago']==1) ? '' : 'alert_est_pago()';
+                $boton_pago         = ($row['estado_pago']==1) ? '' : 'alert_est_pago()';
 
                 $mensaje_estentrega    = ($row['estado_entrega']==1) ? ' ENTREGADO' : ' NO ENTREGADO';
                 $color_estentrega      = ($row['estado_entrega']==1) ? '#28a745' : 'salmon';
