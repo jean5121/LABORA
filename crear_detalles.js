@@ -213,33 +213,41 @@ function ajax_cambio_est_envio(ide){
     });
 }
 
-function dtable_cargar_pen_hoy(){
+function campana(qry){
+  var fechaActual = new Date();
 
-  var variableBusqueda = "hoy"; // Este es el valor que quieres enviar
-  sessionStorage.setItem('busquedaDataTable', variableBusqueda);
+  switch (qry) {
+    case 'hoy':
+      fechaActual.setDate(fechaActual.getDate());
+      break;
+    case 'mañana':
+      fechaActual.setDate(fechaActual.getDate() + 1);
+      
+      break;
+    case 'pasado':
+      fechaActual.setDate(fechaActual.getDate() + 2);
+      break; 
+
+  }    
+      var fechaFormateada =
+      ('0' + fechaActual.getDate()).slice(-2) + '-' +
+      ('0' + (fechaActual.getMonth() + 1)).slice(-2) + '-' +
+      fechaActual.getFullYear();
+
+  sessionStorage.setItem('busquedaDataTable', fechaFormateada);
   window.location.href = "inicio.php?modulo=voletas";
-  // var variable = "hoy";
-  // var tabla = $('#example1').DataTable();
-  // tabla.search(variable).draw();
-  
-
 }
-///VER HOY
-function dtable_cargar_hoy(){
-  var tabla = $('#example1').DataTable();
-  var valorBusqueda = 'Hoy' // Obtener el valor del campo de entrada
 
-  // Aplicar la búsqueda en todas las columnas y redibujar la tabla
-  tabla.search(valorBusqueda).draw();
-}
 
 ///VER DEUDORES
-function dtable_cargar_deudas(){
+function dtable_cargar_seach(s){
+
+    
       var tabla = $('#example1').DataTable();
-      var valorBusqueda = 'SIN PAGAR' // Obtener el valor del campo de entrada
+      //var valorBusqueda = 'SIN PAGAR' // Obtener el valor del campo de entrada
 
       // Aplicar la búsqueda en todas las columnas y redibujar la tabla
-      tabla.search(valorBusqueda).draw();
+      tabla.search(s).draw();
 }
 ///CONFIRMAR GUARDADO DE BOLETA
     $(function() {
@@ -278,8 +286,13 @@ function dtable_cargar_deudas(){
     
     });
 
-
+    var varesi = sessionStorage.getItem('busquedaDataTable');
     $("#example1").DataTable({
+
+      "search": {
+        "search": varesi
+        },
+
       "responsive": true, "lengthChange": 1, "autoWidth": 1,
       "buttons": ["excel", "pdf", "print",],
       language: {
@@ -304,6 +317,7 @@ function dtable_cargar_deudas(){
     },
 
     }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)'); 
+    sessionStorage.setItem('busquedaDataTable', '');
 });
 
 

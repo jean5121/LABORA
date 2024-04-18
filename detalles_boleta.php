@@ -50,7 +50,7 @@ if (isset($_REQUEST['idBole'])) {
 
     include_once 'conect.php';
     $con =mysqli_connect($host,$user_db,$contra_db,$db);
-    $queryBOLE = "SELECT idboleta,fecha_crea,precio_total,estado_pago,deuda,estado_entrega,fecha_entrega,b.idclinica,b.idusuario_creador,b.idodontologo,
+    $queryBOLE = "SELECT idboleta,DATE_FORMAT(fecha_crea, '%d-%m-%Y %H:%i:%s')f_crea,precio_total,estado_pago,deuda,estado_entrega,DATE_FORMAT(fecha_entrega, '%d-%m-%Y') AS fentrega ,b.idclinica,b.idusuario_creador,b.idodontologo,
 	c.nombre_cli,c.telefono_cli,c.direccion_cli,c.referencia_cli,c.ruc_cli,o.nombre_odo,o.telefono,o.dni_odo,o.ruc_odonto,
     u.nombre_usuario,tu.ctipouser
     FROM boleta b
@@ -148,7 +148,7 @@ if (isset($_REQUEST['idBole'])) {
                     <div class="info-box bg-light">
                         <div class="info-box-content">
                         <span class="info-box-text text-center text-muted"><b>FECHA DE CREACION</b></span>
-                        <span class="info-box-number text-center text-muted mb-0"><p style="color: #28a745;font-size: 19px"><?php echo $row['fecha_crea'];?></p></span>
+                        <span class="info-box-number text-center text-muted mb-0"><p style="color: #28a745;font-size: 19px"><?php echo $row['f_crea'];?></p></span>
                         </div>
                     </div>
                     </div>
@@ -156,7 +156,7 @@ if (isset($_REQUEST['idBole'])) {
                     <div class="info-box bg-light">
                         <div class="info-box-content">
                         <span class="info-box-text text-center text-muted"><b>FECHA DE ENTREGA</b></span>
-                        <span class="info-box-number text-center text-muted mb-0"><p style="color: salmon;font-size: 19px"><?php echo $row['fecha_entrega'];?></p></span>
+                        <span class="info-box-number text-center text-muted mb-0"><p style="color: salmon;font-size: 19px"><?php echo $row['fentrega'];?></p></span>
                         </div>
                     </div>
                     </div>

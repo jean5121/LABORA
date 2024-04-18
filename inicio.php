@@ -95,17 +95,17 @@
         <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
           <span class="dropdown-item dropdown-header"><b style="color: salmon;font-size:17px"><?php echo $tot_3dias ?></b> PENDIENTES</span>
           <div class="dropdown-divider"></div>
-          <a onclick="dtable_cargar_pen_hoy()" class="dropdown-item">
+          <a onclick="campana('hoy')" class="dropdown-item">
             <i class="fas fa-hammer mr-2"></i> <?php echo $row['hoy']?> por entregar
             <span class="float-right text-muted text-sm">hoy</span>
           </a>
           <div class="dropdown-divider"></div>
-          <a href="#" class="dropdown-item">
+          <a onclick="campana('mañana')" class="dropdown-item">
             <i class="fas fa-briefcase mr-2"></i> <?php echo $row['manana']?> por entregar
             <span class="float-right text-muted text-sm">Mañana</span>
           </a>
           <div class="dropdown-divider"></div>
-          <a href="#" class="dropdown-item">
+          <a onclick="campana('pasado')" class="dropdown-item">
             <i class="fas fa-tooth mr-2"></i> <?php echo $row['pasado_manana']?> por entregar
             <span class="float-right text-muted text-sm">Pasado Mañana </span>
           </a>
