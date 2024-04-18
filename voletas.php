@@ -6,10 +6,7 @@
 </script>
 
 <style>
-  .dataTables_filter input[type="search"] {
-    border: 1px solid salmon;
-    color: #fff3cd;
-}
+
 </style>
 
 <div class="content-wrapper">
@@ -81,7 +78,7 @@
                   <tr>
                     <td><span class="badge badge-warning" style="font-size:19px">C-<?php echo $rowGENE['idboleta'] ?></span></td>
                     <td><?php echo $rowGENE['fecha_crea'] ?></td>
-                    <td>E-<?php echo $rowGENE['fecha_entrega'] ?></td>
+                    <td><?php echo $rowGENE['fecha_entrega'] ?></td>
                     <td><?php echo $rowGENE['nombre_cli'] ?></td>
                     <td><?php echo $rowGENE['nombre_odo'] ?></td>
                     <td><?php echo $rowGENE['deuda'] ?></td>
@@ -170,15 +167,6 @@
     <!-- /.content -->
   </div>
   <script>
-
-// document.addEventListener("DOMContentLoaded", function() {
-//   var variableBusqueda = sessionStorage.getItem('busquedaDataTable');
-// if (variableBusqueda) {
-  
-// }
-// });
-// Recuperar la variable enviada desde la otra página
-
 
 
 </script>

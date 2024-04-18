@@ -285,15 +285,17 @@ function dtable_cargar_seach(s){
       });
     
     });
-
-    var varesi = sessionStorage.getItem('busquedaDataTable');
+    var varesi ='';
+    varesi = sessionStorage.getItem('busquedaDataTable');
     $("#example1").DataTable({
 
+      ordering: 0,
       "search": {
         "search": varesi
         },
+        
 
-      "responsive": true, "lengthChange": 1, "autoWidth": 1,
+      "responsive": 0, "lengthChange": 1, "autoWidth": 0,
       "buttons": ["excel", "pdf", "print",],
       language: {
         "decimal": "",
@@ -316,8 +318,8 @@ function dtable_cargar_seach(s){
         }
     },
 
-    }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)'); 
-    sessionStorage.setItem('busquedaDataTable', '');
+    }); 
+    sessionStorage.setItem('busquedaDataTable','');
 });
 
 
