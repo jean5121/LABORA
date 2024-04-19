@@ -184,7 +184,7 @@ function confirmar_envio(id) {
           showDenyButton: true,
           showCancelButton: 0,
           showCloseButton: true,
-          confirmButtonText: "ACEPTAR",
+          confirmButtonText: "SI",
           denyButtonText: `No`
       })
       .then((result) => {
@@ -229,7 +229,7 @@ function campana(qry){
       break; 
 
   }    
-      var fechaFormateada =
+      var fechaFormateada = 'E-'+
       ('0' + fechaActual.getDate()).slice(-2) + '-' +
       ('0' + (fechaActual.getMonth() + 1)).slice(-2) + '-' +
       fechaActual.getFullYear();
@@ -286,7 +286,8 @@ function dtable_cargar_seach(s){
     
     });
     var varesi ='';
-    varesi = sessionStorage.getItem('busquedaDataTable');
+    varesi =sessionStorage.getItem('busquedaDataTable');
+
     $("#example1").DataTable({
 
       ordering: 0,
