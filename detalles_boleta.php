@@ -61,15 +61,13 @@ if (isset($_REQUEST['idBole'])) {
     where idboleta = $IDBOLE";
     $respuesta = mysqli_query($con,$queryBOLE);
     $row = mysqli_fetch_assoc($respuesta);
-
-    ////OBTENER EL CONTADOR DE PAGOS (MONTO TOTAL PAGADO)
-    $queryPAGOTOTAL = "SELECT SUM(cantidad_pago) AS PAGOTOTAL FROM `pagos` WHERE idvoleta  = $IDBOLE";
-    $respuestaPAGOTOTAL = mysqli_query($con,$queryPAGOTOTAL);
-    $rowPAGOTOTAL = mysqli_fetch_assoc($respuestaPAGOTOTAL);
-
-    $porcentaje_calculado = ( 100* $rowPAGOTOTAL['PAGOTOTAL']) /$row['precio_total'];
-    $porcentaje_calculado = round($porcentaje_calculado, 0);
     mysqli_close($con);
+    ////OBTENER EL CONTADOR DE PAGOS (MONTO TOTAL PAGADO)
+    
+    $pagotot = ($row['precio_total']-$row['deuda']);
+    $porcentaje_calculado = ( 100* $pagotot) /$row['precio_total'];
+    $porcentaje_calculado = round($porcentaje_calculado, 0);
+    
 
 }   
 ?>
@@ -96,7 +94,17 @@ if (isset($_REQUEST['idBole'])) {
 
         <!-- Default box -->
         <div class="card">
-            <div class="card-header">
+            <div class="card-header">            
+                <!-- /.info-box-content -->           
+            <div class="card-tools">
+                
+                <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
+                <i class="fas fa-minus"></i>
+                </button>
+                <button type="button" class="btn btn-tool" data-card-widget="remove" title="Remove">
+                <i class="fas fa-times"></i>
+                </button>
+            </div>
             <ul class="list-group list-group-horizontal gap-2">
                 <?php    
                 $mensaje_estpago    = ($row['estado_pago']==1) ? ' CANCELADO' : ' NO CANCELADO';
@@ -123,22 +131,9 @@ if (isset($_REQUEST['idBole'])) {
                 <li onclick="<?php echo $boton_entre ?>" class="list-group-item border-left-0" style="color:<?php echo $color_estentrega; ?>;border: 2px solid <?php echo $color_estentrega; ?> ;">
                 <svg viewBox="0 0 640 512" style="fill:<?php echo $color_estentrega; ?>" width="30" height="30"><path d="M64 32C28.7 32 0 60.7 0 96V304v80 16c0 44.2 35.8 80 80 80c26.2 0 49.4-12.6 64-32c14.6 19.4 37.8 32 64 32c44.2 0 80-35.8 80-80c0-5.5-.6-10.8-1.6-16H416h33.6c-1 5.2-1.6 10.5-1.6 16c0 44.2 35.8 80 80 80s80-35.8 80-80c0-5.5-.6-10.8-1.6-16H608c17.7 0 32-14.3 32-32V288 272 261.7c0-9.2-3.2-18.2-9-25.3l-58.8-71.8c-10.6-13-26.5-20.5-43.3-20.5H480V96c0-35.3-28.7-64-64-64H64zM585 256H480V192h48.8c2.4 0 4.7 1.1 6.2 2.9L585 256zM528 368a32 32 0 1 1 0 64 32 32 0 1 1 0-64zM176 400a32 32 0 1 1 64 0 32 32 0 1 1 -64 0zM80 368a32 32 0 1 1 0 64 32 32 0 1 1 0-64z"/></svg>
                 <?php echo $mensaje_estentrega ?>
-                </li>
-
-                
-                
+                </li>               
             </ul>
-            
-                <!-- /.info-box-content -->
-            
-            <div class="card-tools">
-                <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
-                <i class="fas fa-minus"></i>
-                </button>
-                <button type="button" class="btn btn-tool" data-card-widget="remove" title="Remove">
-                <i class="fas fa-times"></i>
-                </button>
-            </div>
+
             </div>
             <div class="card-body">
             <div class="row">
@@ -165,7 +160,7 @@ if (isset($_REQUEST['idBole'])) {
                         <div class="info-box-content">
                             <div class="progress-group">
                                 <b style="font-size: 17px">P. TOTAL</b>
-                                <span class="float-right"><b style="font-size: 19px"><?php echo $rowPAGOTOTAL['PAGOTOTAL']??0 ?></b>/<b style="color: salmon;font-size: 21px"><?php echo $row['precio_total'];?></b></span>                   
+                                <span class="float-right"><b style="font-size: 19px"><?php echo $pagotot??0 ?></b>/<b style="color: salmon;font-size: 21px"><?php echo $row['precio_total'];?></b></span>                   
                                 
                             </div>                           
                             <div class="progress progress-sm" style="height: 15px;">
@@ -248,8 +243,10 @@ if (isset($_REQUEST['idBole'])) {
             <div class="card">
                 <div class="card-header">
                 <h3 class="card-title">PAGOS</h3>
-                
+
                 <div class="card-tools">
+                    <button onclick="confirmar_pago()" type="button" class="btn btn-outline-warning  btn-sm">
+                        AGREGAR PAGO</button>
                     <button type="button" class="btn btn-tool" data-card-widget="collapse">
                     <i class="fas fa-minus"></i>
                     </button>

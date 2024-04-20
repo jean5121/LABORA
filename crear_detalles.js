@@ -160,6 +160,58 @@ function cerrar_sesion(id) {
           }
       });
   }
+    ////AJAX LLENAR MEDIO DE PAGO
+    function ajax_llenar_med_pago() {
+      return new Promise((resolve, reject) => {
+          $.ajax({
+              url: "funciones.php",
+              method: "GET",
+              data: { funcion: "llenar_med_pago" },
+              dataType: "text",
+              success: function (respuesta) {
+                  resolve(respuesta); // Resuelve la promesa con la respuesta
+              },
+              error: function (xhr, status, error) {
+                  reject(error); // Rechaza la promesa con el error
+              }
+          });
+      });
+  }
+
+async function confirmar_pago(){
+  let op = '<option value="1">arroz</option>'; // Declarar op fuera de la promesa
+
+  try {
+    op += await ajax_llenar_med_pago(); // Esperar a que la promesa se resuelva
+  } catch (error) {
+    console.error(error); // Manejar el error si ocurre
+    return; // Salir de la función en caso de error
+  }
+  alert(op);
+  const { value: formValues } = await  Swal.fire({
+    title: "Multiple inputs",
+    html: `
+        <select id="med" name="frutas" class="swal2-input">
+        
+        ${op}
+        </select>
+      <input id="cantidad" class="swal2-input" type="number">
+    `
+    ,
+    focusConfirm: false,
+    preConfirm: () => {
+      return [
+        document.getElementById("med").value,
+        document.getElementById("cantidad").value
+      ];
+    }
+  });
+  if (formValues) {
+    alert(formValues);
+    Swal.fire(JSON.stringify(formValues));
+  }
+}
+
 
   function ajax_log_out(){
     $.ajax({

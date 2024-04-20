@@ -27,8 +27,26 @@ if(isset($_GET['funcion']) && !empty($_GET['funcion'])) {
         case 'salir':        
             salirphp();
             break;
+        case 'llenar_med_pago':        
+            llenar_php_med_pagos();
+            break;
         
     }
+}
+
+function llenar_php_med_pagos(){
+    include_once 'conect.php';
+    $con =mysqli_connect($host,$user_db,$contra_db,$db);
+    $query = "SELECT idmedio_pago,cmedio from medio_pago where est_med =1 ORDER BY cmedio ASC";
+    $respuesta = mysqli_query($con,$query);
+        
+    $clinicas ='';
+
+    while ($row = mysqli_fetch_assoc($respuesta)) {
+        $clinicas.='<option value="'.$row["idmedio_pago"].'">'.$row["cmedio"].'</option>';
+    }
+    echo $clinicas;
+    mysqli_close($con);
 }
 
 function cambio_est_envio($id){
