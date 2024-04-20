@@ -178,8 +178,8 @@ function cerrar_sesion(id) {
       });
   }
 
-async function confirmar_pago(){
-  let op = '<option value="1">arroz</option>'; // Declarar op fuera de la promesa
+async function confirmar_pago(idb){
+  let op = ''; // Declarar op fuera de la promesa
 
   try {
     op += await ajax_llenar_med_pago(); // Esperar a que la promesa se resuelva
@@ -187,27 +187,40 @@ async function confirmar_pago(){
     console.error(error); // Manejar el error si ocurre
     return; // Salir de la función en caso de error
   }
-  alert(op);
   const { value: formValues } = await  Swal.fire({
-    title: "Multiple inputs",
+    title: "AGREGAR PAGO PARA <p class='badge badge-warning'> C-"+idb+"</p>",
+    text:'MEDIO DE PAGO',
+    showDenyButton: 0,
+    showCancelButton: 0,
+    showCloseButton: true,
+    confirmButtonColor: '#28a745',
+    confirmButtonText: "AGREGAR",
+    denyButtonText: `No`,
     html: `
-        <select id="med" name="frutas" class="swal2-input">
-        
-        ${op}
-        </select>
-      <input id="cantidad" class="swal2-input" type="number">
-    `
-    ,
+    <form>
+        <div class="form-group">
+          <input placeholder="Ingresar cantidad" min="0" id="cantidad" class="swal2-input" type="number" required>
+          <select id="med" class="swal2-input"> 
+          ${op}
+          </select>  
+      </div>
+    </form>
+    `,
     focusConfirm: false,
     preConfirm: () => {
+      const cantidad = document.getElementById("cantidad").value;
+      if (cantidad > 0) {
       return [
+        idb,
         document.getElementById("med").value,
         document.getElementById("cantidad").value
       ];
+      }else {
+        Swal.showValidationMessage("La cantidad debe ser mayor que 0");
+      }
     }
   });
   if (formValues) {
-    alert(formValues);
     Swal.fire(JSON.stringify(formValues));
   }
 }

@@ -243,9 +243,9 @@ if (isset($_REQUEST['idBole'])) {
             <div class="card">
                 <div class="card-header">
                 <h3 class="card-title">PAGOS</h3>
-
+                <?php        ?>
                 <div class="card-tools">
-                    <button onclick="confirmar_pago()" type="button" class="btn btn-outline-warning  btn-sm">
+                    <button onclick="confirmar_pago(<?php echo $IDBOLE ?>)" type="button" class="btn btn-outline-warning  btn-sm">
                         AGREGAR PAGO</button>
                     <button type="button" class="btn btn-tool" data-card-widget="collapse">
                     <i class="fas fa-minus"></i>
