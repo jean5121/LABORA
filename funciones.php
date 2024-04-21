@@ -30,9 +30,38 @@ if(isset($_GET['funcion']) && !empty($_GET['funcion'])) {
         case 'llenar_med_pago':        
             llenar_php_med_pagos();
             break;
+        case 'cargar_pago':
+            $boletaid = $_GET['cod'];
+            $mdpago = $_GET['imedio'];
+            $monto = $_GET['mot'];    
+            $iduse = $_GET['idus'];
+            cargar_pagos_php($boletaid,$mdpago,$monto,$iduse);
+            break;
         
     }
 }
+
+function cargar_pagos_php($b,$mp,$monto,$idusse){
+
+    include_once 'conect.php';
+    $con =mysqli_connect($host,$user_db,$contra_db,$db);
+    $query = "UPDATE boleta SET deuda = (deuda - $monto) WHERE idboleta =$b AND deuda >= $monto;    ";
+    $resultado = mysqli_query($con,$query);
+    if ($resultado && $con->affected_rows > 0) {
+        // Actualizar otra tabla
+        $con->query("INSERT INTO pagos (cantidad_pago, fecha_pago, idmedio_pago,idusuario,idvoleta) 
+                        VALUES ($monto, NOW(), $mp,$idusse,$b);");
+        echo "La actualización se realizó correctamente.";
+    } else {
+        echo "No se pudo realizar la actualización.";
+    }
+
+
+    mysqli_close($con);
+
+}
+
+
 
 function llenar_php_med_pagos(){
     include_once 'conect.php';

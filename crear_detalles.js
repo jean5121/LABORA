@@ -160,6 +160,24 @@ function cerrar_sesion(id) {
           }
       });
   }
+
+    ////AJAX ENVIAR PAGO
+    function ajax_enviar_pago(idbta,idme,monto,iduser){
+
+      $.ajax({
+        url: "funciones.php",
+        method: "GET",
+        async: false,
+        data: {funcion: "cargar_pago",cod:idbta,imedio:idme,mot:monto,idus:iduser},
+        dataType: "text",
+        success: function(respuesta) {
+          alert(respuesta);
+          //window.location.href="inicio.php?modulo=detalles_boleta&idBole="+ide
+        },
+        
+        });
+    }
+    
     ////AJAX LLENAR MEDIO DE PAGO
     function ajax_llenar_med_pago() {
       return new Promise((resolve, reject) => {
@@ -178,7 +196,7 @@ function cerrar_sesion(id) {
       });
   }
 
-async function confirmar_pago(idb){
+async function confirmar_pago(idb,iduser){
   let op = ''; // Declarar op fuera de la promesa
 
   try {
@@ -188,7 +206,7 @@ async function confirmar_pago(idb){
     return; // Salir de la función en caso de error
   }
   const { value: formValues } = await  Swal.fire({
-    title: "AGREGAR PAGO PARA <p class='badge badge-warning'> C-"+idb+"</p>",
+    title: "PAGO PARA <p class='badge badge-warning'> C-"+idb+"</p>",
     text:'MEDIO DE PAGO',
     showDenyButton: 0,
     showCancelButton: 0,
@@ -199,7 +217,7 @@ async function confirmar_pago(idb){
     html: `
     <form>
         <div class="form-group">
-          <input placeholder="Ingresar cantidad" min="0" id="cantidad" class="swal2-input" type="number" required>
+          <input placeholder="Ingresar monto" min="0" id="cantidad" class="swal2-input" type="number" required>
           <select id="med" class="swal2-input"> 
           ${op}
           </select>  
@@ -213,7 +231,8 @@ async function confirmar_pago(idb){
       return [
         idb,
         document.getElementById("med").value,
-        document.getElementById("cantidad").value
+        document.getElementById("cantidad").value,
+        iduser,
       ];
       }else {
         Swal.showValidationMessage("La cantidad debe ser mayor que 0");
@@ -221,7 +240,7 @@ async function confirmar_pago(idb){
     }
   });
   if (formValues) {
-    Swal.fire(JSON.stringify(formValues));
+    ajax_enviar_pago(formValues[0],formValues[1],formValues[2],formValues[3]);
   }
 }
 
