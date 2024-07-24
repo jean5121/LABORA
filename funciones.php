@@ -37,13 +37,19 @@ if(isset($_GET['funcion']) && !empty($_GET['funcion'])) {
             $iduse = $_GET['idus'];
             cargar_pagos_php($boletaid,$mdpago,$monto,$iduse);
             break;
+        case 'cambio_f_entrega':
+            $boletaid = $_GET['cod'];
+            $fentrega = $_GET['f'];            
+            cambiar_fecha_enrega($boletaid,$fentrega);
+            break;
         
     }
 }
 
 function cargar_pagos_php($b,$mp,$monto,$idusse){
-
     include_once 'conect.php';
+    
+    $Jrespu = array(); 
     $con =mysqli_connect($host,$user_db,$contra_db,$db);
     $query = "UPDATE boleta SET deuda = (deuda - $monto) WHERE idboleta =$b AND deuda >= $monto;    ";
     $resultado = mysqli_query($con,$query);
@@ -51,15 +57,46 @@ function cargar_pagos_php($b,$mp,$monto,$idusse){
         // Actualizar otra tabla
         $con->query("INSERT INTO pagos (cantidad_pago, fecha_pago, idmedio_pago,idusuario,idvoleta) 
                         VALUES ($monto, NOW(), $mp,$idusse,$b);");
-        echo "La actualización se realizó correctamente.";
+
+            if ($resultado && $con->affected_rows > 0) {
+                $Jrespu['success'] = true;
+                $Jrespu['mensaje'] = 'El pago se realizo correctamente.';
+            } else {
+                $Jrespu['success'] = false;
+                $Jrespu['mensaje'] = 'Error al insertar el pago: '. mysqli_error($con);
+            }
     } else {
-        echo "No se pudo realizar la actualización.";
+        $Jrespu['success'] = false;
+        $Jrespu['mensaje'] = 'No se pudo realizar el pago: VERIFICAR MONTO';
     }
-
-
+    $Jrespu['idboleta'] = $b;
+    echo json_encode($Jrespu);
     mysqli_close($con);
-
+    
 }
+
+function cambiar_fecha_enrega($b,$f){
+    include_once 'conect.php';
+    
+    $Jrespu = array(); 
+    $con =mysqli_connect($host,$user_db,$contra_db,$db);
+    $query = "UPDATE boleta SET fecha_entrega = '$f' WHERE idboleta =$b ;    ";
+    $resultado = mysqli_query($con,$query);
+    if ($resultado && $con->affected_rows > 0) {
+        
+            $Jrespu['success'] = true;
+            $Jrespu['mensaje'] = 'Se cambio la fecha correctamente.';
+            
+    } else {
+        $Jrespu['success'] = false;
+        $Jrespu['mensaje'] = 'No se pudo cambiar la fecha'. mysqli_error($con);
+    }
+    $Jrespu['idboleta'] = $b;
+    echo json_encode($Jrespu);
+    mysqli_close($con);
+    
+}
+
 
 
 

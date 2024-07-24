@@ -152,6 +152,12 @@ if (isset($_REQUEST['idBole'])) {
                         <div class="info-box-content">
                         <span class="info-box-text text-center text-muted"><b>FECHA DE ENTREGA</b></span>
                         <span class="info-box-number text-center text-muted mb-0"><p style="color: salmon;font-size: 19px"><?php echo $row['fentrega'];?></p></span>
+                        <span class="text-center d-block">
+                            <button onclick="confirmar_cambio_fentrega(<?php echo $IDBOLE?>)" type="button" class="btn btn-sm btn-secondary">
+                                CAMBIAR FECHA</button>
+    
+                            </button>
+                        </span>
                         </div>
                     </div>
                     </div>

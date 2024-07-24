@@ -69,8 +69,8 @@
               $con =mysqli_connect($host,$user_db,$contra_db,$db);
               $queryGENE = "SELECT idboleta,deuda,estado_entrega,estado_pago,DATE_FORMAT(fecha_crea, '%d-%m-%Y %H:%i:%s')f_crea,DATE_FORMAT(fecha_entrega, '%d-%m-%Y') AS fentrega,precio_total,c.nombre_cli,o.nombre_odo
                             FROM `boleta` b
-                            LEFT JOIN 	clinica c 		ON	b.idclinica 	= c.idclinica
-                            LEFT JOIN	odontologo o 	ON	b.idodontologo	= o.idodontologo
+                            INNER JOIN 	clinica c 		ON	b.idclinica 	= c.idclinica
+                            INNER JOIN	odontologo o 	ON	b.idodontologo	= o.idodontologo
                             WHERE fecha_crea BETWEEN DATE_SUB(now(), INTERVAL 4 MONTH) AND now() ORDER BY fecha_crea DESC;";
               $respuestaGENE = mysqli_query($con,$queryGENE);
               while ($rowGENE=mysqli_fetch_assoc($respuestaGENE)) {

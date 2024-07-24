@@ -96,7 +96,7 @@
           <span class="dropdown-item dropdown-header"><b style="color: salmon;font-size:17px"><?php echo $tot_3dias ?></b> PENDIENTES</span>
           <div class="dropdown-divider"></div>
           <a onclick="campana('hoy')" class="dropdown-item">
-            <i class="fas fa-hammer mr-2"></i> <?php echo $row['hoy']?> por entregar
+            <i class="fas fa-briefcase mr-2"></i> <?php echo $row['hoy']?> por entregar
             <span class="float-right text-muted text-sm">hoy</span>
           </a>
           <div class="dropdown-divider"></div>
@@ -106,7 +106,7 @@
           </a>
           <div class="dropdown-divider"></div>
           <a onclick="campana('pasado')" class="dropdown-item">
-            <i class="fas fa-tooth mr-2"></i> <?php echo $row['pasado_manana']?> por entregar
+            <i class="fas fa-briefcase mr-2"></i> <?php echo $row['pasado_manana']?> por entregar
             <span class="float-right text-muted text-sm">Pasado Mañana </span>
           </a>
         </div>
@@ -182,7 +182,7 @@
               <li class="nav-item">
                 <a href="inicio.php?modulo=clinicas" class="nav-link <?php echo ($modulo=="clinicas")?"active":" ";?>">
                   <i class="far fa-circle nav-icon"></i>
-                  <p>CLINICAS</p>
+                  <p>ADMIN</p>
                 </a>
               </li>
               

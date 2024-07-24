@@ -163,21 +163,66 @@ function cerrar_sesion(id) {
 
     ////AJAX ENVIAR PAGO
     function ajax_enviar_pago(idbta,idme,monto,iduser){
-
+      
       $.ajax({
         url: "funciones.php",
         method: "GET",
         async: false,
         data: {funcion: "cargar_pago",cod:idbta,imedio:idme,mot:monto,idus:iduser},
-        dataType: "text",
-        success: function(respuesta) {
-          alert(respuesta);
-          //window.location.href="inicio.php?modulo=detalles_boleta&idBole="+ide
+        dataType: "json",
+        success:function(respu){ 
+          
+          let iconomsg = respu.success==1 ? 'success' : 'error';
+          Swal.fire({
+            position: "center",
+            icon: iconomsg,
+            title: respu.mensaje,
+            showConfirmButton: false,
+            timer: 1500
+          }).then((result) => {
+            // Redirigir a otra página
+            window.location.href = "inicio.php?modulo=detalles_boleta&idBole="+respu.idboleta;
+        });
         },
+        error: function(xhr, status, error) {
+          alert("Error en la solicitud AJAX: " + status+error); // Mostrar mensaje de error
+          console.error(xhr.responseText); // Mostrar detalle del error en la consola
+      }
         
         });
     }
     
+////AJAX CAMBIAR F ENTREGA
+function ajax_cambio_fentrega(idbta,fetre){
+      
+  $.ajax({
+    url: "funciones.php",
+    method: "GET",
+    async: false,
+    data: {funcion: "cambio_f_entrega",cod:idbta,f:fetre},
+    dataType: "json",
+    success:function(respu){ 
+      
+      let iconomsg = respu.success==1 ? 'success' : 'error';
+      Swal.fire({
+        position: "center",
+        icon: iconomsg,
+        title: respu.mensaje,
+        showConfirmButton: false,
+        timer: 1500
+      }).then((result) => {
+        // Redirigir a otra página
+        window.location.href = "inicio.php?modulo=detalles_boleta&idBole="+respu.idboleta;
+    });
+    },
+    error: function(xhr, status, error) {
+      alert("Error en la solicitud AJAX: " + status+error); // Mostrar mensaje de error
+      console.error(xhr.responseText); // Mostrar detalle del error en la consola
+  }
+    
+    });
+}
+
     ////AJAX LLENAR MEDIO DE PAGO
     function ajax_llenar_med_pago() {
       return new Promise((resolve, reject) => {
@@ -244,6 +289,41 @@ async function confirmar_pago(idb,iduser){
   }
 }
 
+
+async function confirmar_cambio_fentrega(idb){
+  
+  const { value: formValues } = await  Swal.fire({
+    title: "CAMBIO FECHA DE ENTRAGA PARA<p class='badge badge-warning'> C-"+idb+"</p>",
+    text:'MEDIO DE PAGO',
+    showDenyButton: 0,
+    showCancelButton: 0,
+    showCloseButton: true,
+    confirmButtonColor: '#28a745',
+    confirmButtonText: "CAMBIAR",
+    denyButtonText: `No`,
+    html: `
+    <form>
+        <div class="form-group text-center">
+          <label>FECHA ENTREGA :</label>
+                        <div class="input-group date col-md-6 mx-auto" id="reservationdate" data-target-input="nearest">                       
+                            <input type="date" id="f_entrega_camb"   class="form-control" required>                        
+                        </div> 
+        </div>
+    </form>
+    `,
+    focusConfirm: false,
+    preConfirm: () => {
+      return [
+        idb,
+        document.getElementById("f_entrega_camb").value,
+      ];
+      
+    }
+  });
+  if (formValues) {
+    ajax_cambio_fentrega(formValues[0],formValues[1]);
+  }
+}
 
   function ajax_log_out(){
     $.ajax({
