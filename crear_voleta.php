@@ -25,8 +25,7 @@
 <script type="text/javascript">
 
 window.onload = lanzador;
-
-
+S
 </script>
 
 <div class="content-wrapper">

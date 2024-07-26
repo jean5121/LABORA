@@ -180,7 +180,91 @@ if (isset($_REQUEST['idBole'])) {
                 </div>
                 <div class="row">
                     <div class="col-12">
-                    <h4>Recent Activity</h4>
+
+                    
+
+                    <div class="card">
+                <div class="card-header">
+                <h3 class="card-title">DETALLES</h3>
+                <?php        ?>
+                <div class="card-tools">
+                    <button onclick="confirmar_pago(<?php echo $IDBOLE.','.$_SESSION['id'] ?>)" type="button" class="btn btn-outline-warning  btn-sm">
+                        AGREGAR PAGO</button>
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                    <i class="fas fa-minus"></i>
+                    </button>
+                </div>
+                </div>
+                <!-- /.card-header -->
+                <div class="card-body p-2">
+                <div class="post">
+                        <div class="user-block">
+                            
+                            <span class="username">
+                            <a href="#">Jonathan Burke Jr.</a>
+                            </span>
+                            <span class="description">Shared publicly - 7:45 PM today</span>
+                        </div>
+                        <!-- /.user-block -->
+                        <p>
+                            Lorem ipsum represents a long-held tradition for designers,
+                            typographers and the like. Some people hate it and argue for
+                            its demise, but others ignore.
+                        </p>
+
+                        <p>
+                            <a href="#" class="link-black text-sm"><i class="fas fa-link mr-1"></i> Demo File 1 v2</a>
+                        </p>
+                        </div>
+                </div>
+                <?php                   
+                    include_once 'conect.php';
+                    $con =mysqli_connect($host,$user_db,$contra_db,$db);
+                    $queryPAGO = "SELECT fecha_pago, cantidad_pago, u.nombre_usuario, mp.cmedio
+                    FROM pagos p
+                    LEFT JOIN usuario u 	ON u.idusuario = p.idusuario
+                    LEFT JOIN medio_pago mp	on mp.idmedio_pago = p.idmedio_pago
+                    where idvoleta = $IDBOLE ORDER BY fecha_pago DESC;  ";   
+                    $respuestaPAGO = mysqli_query($con,$queryPAGO);                   
+                    ?>
+                <div class="card-body p-0">
+                <?php    
+                    while ($rowPAGOS=mysqli_fetch_assoc($respuestaPAGO)) {
+                        $fecha_hora = $rowPAGOS['fecha_pago'];
+                        $separar = (explode(" ",$fecha_hora));
+                        $fecha = $separar[0];
+                        $hora = $separar[1];
+                        ///
+                        $monto =$rowPAGOS['cantidad_pago'];
+                        $nombre =$rowPAGOS['nombre_usuario']
+                ?>
+                <ul class="products-list product-list-in-card pl-2 pr-2">
+                    <li class="item">
+                    <div class="product-img"> 
+                    <span class="badge badge-dark center" style="font-size:15px"><h7><?php echo $fecha?></h7><br><h7><?php echo $hora?></h7></span>      
+                    </div>
+                    <div class="product-info">
+                        <b onclick="info_pago(<?php echo $monto.',`'.$nombre.'`,`'.$rowPAGOS['cmedio'].'`,`'.$fecha.'`,`'.$hora.'` ' ?>)" class="product-title"><span class="badge badge-info"><?php echo $rowPAGOS['cmedio']?></span>
+                        <span    class="badge badge-success float-right"><h6>S/ <?php echo $rowPAGOS['cantidad_pago']?></h6></span></b>
+                        <span class="product-description">
+                        <?php echo $rowPAGOS['nombre_usuario']?>
+                        </span>
+                    </div>
+                    </li>
+                </ul>
+                <?php    
+                    }
+                    mysqli_close($con);
+                
+                ?>
+                </div>
+                <!-- /.card-body -->
+                <div class="card-footer text-center">
+                <a href="javascript:void(0)" class="uppercase">View All Products</a>
+                </div>
+                <!-- /.card-footer -->
+            </div>
+
                         <div class="post">
                         <div class="user-block">
                             <img class="img-circle img-bordered-sm" src="../../dist/img/user1-128x128.jpg" alt="user image">
@@ -239,8 +323,12 @@ if (isset($_REQUEST['idBole'])) {
                             <a href="#" class="link-black text-sm"><i class="fas fa-link mr-1"></i> Demo File 1 v1</a>
                         </p>
                         </div>
+
+
                     </div>
                 </div>
+
+
                 </div>
 
         <div class="col-12 col-md-12 col-lg-4 order-1 order-md-2 ">
