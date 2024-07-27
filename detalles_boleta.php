@@ -267,9 +267,12 @@ if (isset($_REQUEST['idBole'])) {
 
                         <div class="post">
                         <div class="user-block">
-                            <img class="img-circle img-bordered-sm" src="../../dist/img/user1-128x128.jpg" alt="user image">
+                            <span class="badge d-flex align-items-center p-1 pe-2 text-primary-emphasis bg-primary-subtle border border-primary-subtle rounded-pill">
+                                <img class="rounded-circle me-1" width="24" height="24" src="https://github.com/mdo.png" alt="">Primary
+                            </span>
+
                             <span class="username">
-                            <a href="#">Jonathan Burke Jr.</a>
+                            <a href="#">Jonathan Burke Jrrrr.</a>
                             </span>
                             <span class="description">Shared publicly - 7:45 PM today</span>
                         </div>
@@ -305,8 +308,10 @@ if (isset($_REQUEST['idBole'])) {
                         </div>
 
                         <div class="post">
-                        <div class="user-block">
-                            <img class="img-circle img-bordered-sm" src="../../dist/img/user1-128x128.jpg" alt="user image">
+                        <div class="user-block d-flex align-items-center">
+                            <span class="badge badge-success rounded-circle d-flex justify-content-center align-items-center" style="width: 128px; height: 128px; font-size: 64px; font-weight: bold;">
+                                7
+                            </span>
                             <span class="username">
                             <a href="#">Jonathan Burke Jr.</a>
                             </span>
