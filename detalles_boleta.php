@@ -199,7 +199,12 @@ if (isset($_REQUEST['idBole'])) {
                 <div class="card-body p-2">
                 <div class="post">
                         <div class="user-block">
-                            
+                    
+                        <span    class="badge badge-success float-right"><h6>S/ 55</h6></span></b>
+
+                        <div class="d-flex justify-content-center align-items-center rounded-circle bg-secondary text-white " style="width: 38px; height: 38px;">
+                            <span class="font-weight-bold" style="font-size: 20px;">10</span>
+                        </div>
                             <span class="username">
                             <a href="#">Jonathan Burke Jr.</a>
                             </span>
