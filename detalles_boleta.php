@@ -54,10 +54,10 @@ if (isset($_REQUEST['idBole'])) {
 	c.nombre_cli,c.telefono_cli,c.direccion_cli,c.referencia_cli,c.ruc_cli,o.nombre_odo,o.telefono,o.dni_odo,o.ruc_odonto,
     u.nombre_usuario,tu.ctipouser
     FROM boleta b
-    LEFT JOIN clinica c 	ON c.idclinica 		= b.idclinica
-    LEFT JOIN odontologo o 	ON o.idodontologo 	= b.idodontologo
-    LEFT JOIN usuario u 	ON u.idusuario 		= b.idusuario_creador
-    LEFT JOIN tipo_usuario tu ON tu.idtipo_usuario = u.tipo_usuario 
+    inner JOIN clinica c 	ON c.idclinica 		= b.idclinica
+    inner JOIN odontologo o 	ON o.idodontologo 	= b.idodontologo
+    inner JOIN usuario u 	ON u.idusuario 		= b.idusuario_creador
+    inner JOIN tipo_usuario tu ON tu.idtipo_usuario = u.tipo_usuario 
     where idboleta = $IDBOLE";
     $respuesta = mysqli_query($con,$queryBOLE);
     $row = mysqli_fetch_assoc($respuesta);
@@ -197,72 +197,56 @@ if (isset($_REQUEST['idBole'])) {
                 </div>
                 <!-- /.card-header -->
                 <div class="card-body p-2">
-                <div class="post">
-                        <div class="user-block">
-                    
-                        <span    class="badge badge-success float-right"><h6>S/ 55</h6></span></b>
 
-                        <div class="d-flex justify-content-center align-items-center rounded-circle bg-secondary text-white " style="width: 38px; height: 38px;">
-                            <span class="font-weight-bold" style="font-size: 20px;">10</span>
-                        </div>
-                            <span class="username">
-                            <a href="#">Jonathan Burke Jr.</a>
-                            </span>
-                            <span class="description">Shared publicly - 7:45 PM today</span>
-                        </div>
-                        <!-- /.user-block -->
-                        <p>
-                            Lorem ipsum represents a long-held tradition for designers,
-                            typographers and the like. Some people hate it and argue for
-                            its demise, but others ignore.
-                        </p>
-
-                        <p>
-                            <a href="#" class="link-black text-sm"><i class="fas fa-link mr-1"></i> Demo File 1 v2</a>
-                        </p>
-                        </div>
-                </div>
-                <?php                   
-                    include_once 'conect.php';
-                    $con =mysqli_connect($host,$user_db,$contra_db,$db);
-                    $queryPAGO = "SELECT fecha_pago, cantidad_pago, u.nombre_usuario, mp.cmedio
-                    FROM pagos p
-                    LEFT JOIN usuario u 	ON u.idusuario = p.idusuario
-                    LEFT JOIN medio_pago mp	on mp.idmedio_pago = p.idmedio_pago
-                    where idvoleta = $IDBOLE ORDER BY fecha_pago DESC;  ";   
-                    $respuestaPAGO = mysqli_query($con,$queryPAGO);                   
-                    ?>
-                <div class="card-body p-0">
-                <?php    
-                    while ($rowPAGOS=mysqli_fetch_assoc($respuestaPAGO)) {
-                        $fecha_hora = $rowPAGOS['fecha_pago'];
-                        $separar = (explode(" ",$fecha_hora));
-                        $fecha = $separar[0];
-                        $hora = $separar[1];
-                        ///
-                        $monto =$rowPAGOS['cantidad_pago'];
-                        $nombre =$rowPAGOS['nombre_usuario']
-                ?>
-                <ul class="products-list product-list-in-card pl-2 pr-2">
-                    <li class="item">
-                    <div class="product-img"> 
-                    <span class="badge badge-dark center" style="font-size:15px"><h7><?php echo $fecha?></h7><br><h7><?php echo $hora?></h7></span>      
-                    </div>
-                    <div class="product-info">
-                        <b onclick="info_pago(<?php echo $monto.',`'.$nombre.'`,`'.$rowPAGOS['cmedio'].'`,`'.$fecha.'`,`'.$hora.'` ' ?>)" class="product-title"><span class="badge badge-info"><?php echo $rowPAGOS['cmedio']?></span>
-                        <span    class="badge badge-success float-right"><h6>S/ <?php echo $rowPAGOS['cantidad_pago']?></h6></span></b>
-                        <span class="product-description">
-                        <?php echo $rowPAGOS['nombre_usuario']?>
-                        </span>
-                    </div>
-                    </li>
-                </ul>
-                <?php    
-                    }
-                    mysqli_close($con);
+            
+            <!-- /.TABLA DETALLES BOLETA -->
+            <div class="card">
+            <?php  
+                include_once 'conect.php';
+                $con =mysqli_connect($host,$user_db,$contra_db,$db);
+                $queryDETA = "SELECT cantidad, descripcion, sub_total, pro.nombre_pro
+                FROM detalle_boleta deta
+                INNER JOIN producto pro 	ON deta.idproducto = pro.idproducto
                 
-                ?>
+                where deta.idvoleta = $IDBOLE;  ";   
+                $respuestaDETA = mysqli_query($con,$queryDETA);  
+
+            ?>
+            <div class="card-header">
+                <h3 class="card-title">Condensed Full Width Table</h3>
+            </div>
+            <!-- /.card-header -->
+            <div class="card-body p-0">
+                <table class="table table-sm">
+                <thead>
+                    <tr>
+                    <th style="width: 10px"></th>
+                    <th>Nombre</th>
+                    <th>Detalle</th>
+                    <th style="width: 100px">Sub total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php    
+                    while ($rowDETA=mysqli_fetch_assoc($respuestaDETA)) {           
+                    ?>
+                    <tr>
+                    <td><?php echo $rowDETA['cantidad'] ?></td>
+                    <td><?php  echo $rowDETA['nombre_pro']  ?></td>
+                    <td>asdfasdfdasfdsfasdfaf fs dfds df df dsf sdf df sdfs d dsf dsf sdfd ffsdfdfd<?php echo $rowDETA['descripcion'] ?></td>
+                    <td><?php echo $rowDETA['sub_total'] ?></td>
+                    </tr>
+                    <?php } mysqli_close($con);  ?>
+                </tbody>
+                </table>
+            </div>
+            <!-- /.card-body -->
+            </div>
+
+
+
                 </div>
+                
                 <!-- /.card-body -->
                 <div class="card-footer text-center">
                 <a href="javascript:void(0)" class="uppercase">View All Products</a>
@@ -270,75 +254,9 @@ if (isset($_REQUEST['idBole'])) {
                 <!-- /.card-footer -->
             </div>
 
-                        <div class="post">
-                        <div class="user-block">
-                            <span class="badge d-flex align-items-center p-1 pe-2 text-primary-emphasis bg-primary-subtle border border-primary-subtle rounded-pill">
-                                <img class="rounded-circle me-1" width="24" height="24" src="https://github.com/mdo.png" alt="">Primary
-                            </span>
-
-                            <span class="username">
-                            <a href="#">Jonathan Burke Jrrrr.</a>
-                            </span>
-                            <span class="description">Shared publicly - 7:45 PM today</span>
-                        </div>
-                        <!-- /.user-block -->
-                        <p>
-                            Lorem ipsum represents a long-held tradition for designers,
-                            typographers and the like. Some people hate it and argue for
-                            its demise, but others ignore.
-                        </p>
-
-                        <p>
-                            <a href="#" class="link-black text-sm"><i class="fas fa-link mr-1"></i> Demo File 1 v2</a>
-                        </p>
-                        </div>
-
-                        <div class="post clearfix">
-                        <div class="user-block">
-                            
-                            <span class="username">
-                            <a href="#">Sarah Ross</a>
-                            </span>
-                            <span class="description">Sent you a message - 3 days ago</span>
-                        </div>
-                        <!-- /.user-block -->
-                        <p>
-                            Lorem ipsum represents a long-held tradition for designers,
-                            typographers and the like. Some people hate it and argue for
-                            its demise, but others ignore.
-                        </p>
-                        <p>
-                            <a href="#" class="link-black text-sm"><i class="fas fa-link mr-1"></i> Demo File 2</a>
-                        </p>
-                        </div>
-
-                        <div class="post">
-                        <div class="user-block d-flex align-items-center">
-                            <span class="badge badge-success rounded-circle d-flex justify-content-center align-items-center" style="width: 128px; height: 128px; font-size: 64px; font-weight: bold;">
-                                7
-                            </span>
-                            <span class="username">
-                            <a href="#">Jonathan Burke Jr.</a>
-                            </span>
-                            <span class="description">Shared publicly - 5 days ago</span>
-                        </div>
-                        <!-- /.user-block -->
-                        <p>
-                            Lorem ipsum represents a long-held tradition for designers,
-                            typographers and the like. Some people hate it and argue for
-                            its demise, but others ignore.
-                        </p>
-
-                        <p>
-                            <a href="#" class="link-black text-sm"><i class="fas fa-link mr-1"></i> Demo File 1 v1</a>
-                        </p>
-                        </div>
-
 
                     </div>
                 </div>
-
-
                 </div>
 
         <div class="col-12 col-md-12 col-lg-4 order-1 order-md-2 ">
