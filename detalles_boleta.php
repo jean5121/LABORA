@@ -204,7 +204,7 @@ if (isset($_REQUEST['idBole'])) {
             <?php  
                 include_once 'conect.php';
                 $con =mysqli_connect($host,$user_db,$contra_db,$db);
-                $queryDETA = "SELECT cantidad, descripcion, sub_total, pro.nombre_pro
+                $queryDETA = "SELECT cantidad, descripcion, sub_total, pro.nombre_pro,precio_unidad
                 FROM detalle_boleta deta
                 INNER JOIN producto pro 	ON deta.idproducto = pro.idproducto
                 
@@ -220,10 +220,11 @@ if (isset($_REQUEST['idBole'])) {
                 <table class="table table-sm">
                 <thead>
                     <tr>
-                    <th style="width: 10px"></th>
+                    <th style="width: 10px">#</th>
                     <th>Nombre</th>
                     <th>Detalle</th>
-                    <th style="width: 100px">Sub total</th>
+                    <th>Precio</th>
+                    <th style="width: 10px">Sub total</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -233,7 +234,8 @@ if (isset($_REQUEST['idBole'])) {
                     <tr>
                     <td><?php echo $rowDETA['cantidad'] ?></td>
                     <td><?php  echo $rowDETA['nombre_pro']  ?></td>
-                    <td>asdfasdfdasfdsfasdfaf fs dfds df df dsf sdf df sdfs d dsf dsf sdfd ffsdfdfd<?php echo $rowDETA['descripcion'] ?></td>
+                    <td><?php echo $rowDETA['descripcion'] ?></td>
+                    <td><?php echo $rowDETA['precio_unidad'] ?></td>
                     <td><?php echo $rowDETA['sub_total'] ?></td>
                     </tr>
                     <?php } mysqli_close($con);  ?>
