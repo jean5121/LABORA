@@ -188,9 +188,12 @@ if (isset($_REQUEST['idBole'])) {
                 <h3 class="card-title">DETALLES</h3>
                 <?php        ?>
                 <div class="card-tools">
-                    <button onclick="confirmar_pago(<?php echo $IDBOLE.','.$_SESSION['id'] ?>)" type="button" class="btn btn-outline-warning  btn-sm">
-                        AGREGAR PAGO</button>
+                    <button onclick="confirmar_pago(<?php echo $IDBOLE.','.$_SESSION['id'] ?>)" type="button" class="btn btn-outline-danger  btn-sm">
+                        IMPRIMIR LAB</button>
                     <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                    <button onclick="confirmar_pago(<?php echo $IDBOLE.','.$_SESSION['id'] ?>)" type="button" class="btn btn-outline-info  btn-sm">
+                        IMPRIMIR EXT</button>
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse">    
                     <i class="fas fa-minus"></i>
                     </button>
                 </div>
@@ -206,11 +209,10 @@ if (isset($_REQUEST['idBole'])) {
                 $con =mysqli_connect($host,$user_db,$contra_db,$db);
                 $queryDETA = "SELECT cantidad, descripcion, sub_total, pro.nombre_pro,precio_unidad
                 FROM detalle_boleta deta
-                INNER JOIN producto pro 	ON deta.idproducto = pro.idproducto
-                
+                INNER JOIN producto pro 	ON deta.idproducto = pro.idproducto                
                 where deta.idvoleta = $IDBOLE;  ";   
                 $respuestaDETA = mysqli_query($con,$queryDETA);  
-
+                $tot = 0;
             ?>
             <div class="card-header">
                 <h3 class="card-title">Condensed Full Width Table</h3>
@@ -238,8 +240,14 @@ if (isset($_REQUEST['idBole'])) {
                     <td><?php echo $rowDETA['precio_unidad'] ?></td>
                     <td><?php echo $rowDETA['sub_total'] ?></td>
                     </tr>
-                    <?php } mysqli_close($con);  ?>
+                    <?php $tot += $rowDETA['sub_total'];   }  ?>
+                    <td></td>
+                    <td>TOTAL</td>
+                    <td></td>
+                    <td></td>
+                    <td><?php echo $tot  ?></td>
                 </tbody>
+                <?php  mysqli_close($con);   ?>
                 </table>
             </div>
             <!-- /.card-body -->
