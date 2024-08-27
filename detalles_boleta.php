@@ -188,7 +188,7 @@ if (isset($_REQUEST['idBole'])) {
                 <h3 class="card-title">DETALLES</h3>
                 <?php        ?>
                 <div class="card-tools">
-                    <button onclick="confirmar_pago(<?php echo $IDBOLE.','.$_SESSION['id'] ?>)" type="button" class="btn btn-outline-danger  btn-sm">
+                    <button onclick="window.open('imprilab.php?bole='+ encodeURIComponent('<?php echo $IDBOLE ?>') , '_blank')" type="button" class="btn btn-outline-danger  btn-sm">
                         IMPRIMIR LAB</button>
                     <button type="button" class="btn btn-tool" data-card-widget="collapse">
                     <button onclick="confirmar_pago(<?php echo $IDBOLE.','.$_SESSION['id'] ?>)" type="button" class="btn btn-outline-info  btn-sm">
