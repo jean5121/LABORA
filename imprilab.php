@@ -45,7 +45,7 @@ Client:<?php echo $row['nombre_odo'];?> <?php echo PHP_EOL; ?>
 #  Description             $$
 1.00 ARDUINO UNO R3        $25.00
 2.00 JAVASCRIPT BOOK        $10.00
-1.00 STICKER PACK           $10.00
+1.00 STICKER PACKk           $10.00
 TOTAL                      $55.00
 --------------------
         </pre>
