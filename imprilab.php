@@ -36,18 +36,26 @@
         <pre>
 BOLETA C-<?php echo $bol;?> <?php echo PHP_EOL; ?>
 FECHA ENTREGA:<?php echo $row['fentrega'];?> <?php echo PHP_EOL; ?>
-Clinic:<?php echo $row['nombre_cli'];?> <?php echo PHP_EOL; ?>
-<?php echo $row['telefono_cli'];?> <?php echo PHP_EOL; ?>
-Client:<?php echo $row['nombre_odo'];?> <?php echo PHP_EOL; ?>
-<?php echo $row['telefono'];?> <?php echo PHP_EOL; ?>
+Clinic:<?php echo $row['nombre_cli']."(".$row['telefono_cli'].")";?>
+<?php echo PHP_EOL; ?>
+Client:<?php echo $row['nombre_odo']."(".$row['telefono'].")";;?> <?php echo PHP_EOL; ?>
+<?php echo PHP_EOL; ?>
 --------------------
+<?php    
 
-#  Description             $$
-1.00 ARDUINO UNO R3        $25.00
-2.00 JAVASCRIPT BOOK        $10.00
-1.00 STICKER PACKk           $10.00
-TOTAL                      $55.00
+include_once 'conect.php';
+$con =mysqli_connect($host,$user_db,$contra_db,$db);
+$queryDETA = "SELECT cantidad, descripcion, sub_total, pro.nombre_pro,precio_unidad
+FROM detalle_boleta deta
+INNER JOIN producto pro 	ON deta.idproducto = pro.idproducto                
+where deta.idvoleta = $bol;  ";   
+$respuestaDETA = mysqli_query($con,$queryDETA);
+
+?>
+<?php while ($rowDETA=mysqli_fetch_assoc($respuestaDETA)) {?>
+<?php echo $rowDETA['cantidad']. "-" . $rowDETA['nombre_pro']."-" .$rowDETA['descripcion']  ?> 
 --------------------
+<?php  }   mysqli_close($con);   ?>
         </pre>
     </div>
     <button class="no-print" id="btnPrint">PrinTTt</button>
