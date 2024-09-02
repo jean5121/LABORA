@@ -56,9 +56,11 @@ $respuestaDETA = mysqli_query($con,$queryDETA);
 <?php echo $rowDETA['cantidad']. "-" . $rowDETA['nombre_pro']."-" .$rowDETA['descripcion']  ?> 
 --------------------
 <?php  }   mysqli_close($con);   ?>
+--------------------
+--------------------
         </pre>
     </div>
-    <button class="no-print" id="btnPrint">PrinTTt</button>
+    <button class="no-print" id="btnPrint">Imprimir</button>
     <script>
         document.getElementById('btnPrint').addEventListener('click', function () {
             window.print();

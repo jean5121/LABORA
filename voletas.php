@@ -2,12 +2,8 @@
 </script>
 <script src="crear_detalles.js">
 
-
 </script>
 
-<style>
-
-</style>
 
 <div class="content-wrapper">
     <!-- Content Header (Page header) -->
@@ -123,12 +119,6 @@
           <!-- /.col -->
         </div>
         <!-- /.row -->
-      </div>
-      <!-- /.container-fluid -->
-    </section>
-    <!-- /.content -->
-  </div>
-  <script>
+</div>
 
 
-</script>
