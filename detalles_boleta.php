@@ -191,7 +191,7 @@ if (isset($_REQUEST['idBole'])) {
                     <button onclick="window.open('imprilab.php?bole='+ encodeURIComponent('<?php echo $IDBOLE ?>') , '_blank')" type="button" class="btn btn-outline-danger  btn-sm">
                         IMPRIMIR LAB</button>
                     <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                    <button onclick="confirmar_pago(<?php echo $IDBOLE.','.$_SESSION['id'] ?>)" type="button" class="btn btn-outline-info  btn-sm">
+                    <button onclick="window.open('impriext.php?bole='+ encodeURIComponent('<?php echo $IDBOLE ?>') , '_blank')" type="button" class="btn btn-outline-info  btn-sm">
                         IMPRIMIR EXT</button>
                     <button type="button" class="btn btn-tool" data-card-widget="collapse">    
                     <i class="fas fa-minus"></i>
