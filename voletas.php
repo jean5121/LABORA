@@ -109,7 +109,7 @@
                     </td>
                   </tr>
                   <?php } mysqli_close($con);  ?>
-                  </tfoot>
+                  </tbody>
                 </table>
               </div>
               <!-- /.card-body -->

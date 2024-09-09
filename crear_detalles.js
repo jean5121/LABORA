@@ -450,15 +450,23 @@ function dtable_cargar_seach(s){
     
     });
     var varesi ='';
+    
     varesi =sessionStorage.getItem('busquedaDataTable');
-
+    
     $("#example1").DataTable({
 
       ordering: 0,
       "search": {
-        "search": varesi
+        "search": varesi || '' 
         },
-        
+
+    "ordering": false,
+        "pageLength": 10,
+        "lengthMenu": [10, 30, 50, 100],
+        "responsive": false,
+        "lengthChange": true,
+        "autoWidth": false,
+        "buttons": ["excel", "pdf", "print"],
 
       "responsive": 0, "lengthChange": 1, "autoWidth": 0,
       "buttons": ["excel", "pdf", "print",],
@@ -484,7 +492,7 @@ function dtable_cargar_seach(s){
     },
 
     }); 
-    sessionStorage.setItem('busquedaDataTable','');
+    //table.draw(true);
 });
 
 
