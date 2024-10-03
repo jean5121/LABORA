@@ -404,9 +404,7 @@ function campana(qry){
 
 
 ///VER DEUDORES
-function dtable_cargar_seach(s){
-
-    
+function dtable_cargar_seach(s){  
       var tabla = $('#example1').DataTable();
       //var valorBusqueda = 'SIN PAGAR' // Obtener el valor del campo de entrada
 
@@ -449,10 +447,8 @@ function dtable_cargar_seach(s){
       });
     
     });
-    var varesi ='';
-    
-    varesi =sessionStorage.getItem('busquedaDataTable');
-    
+    var varesi ='';  
+    varesi =sessionStorage.getItem('busquedaDataTable');   
     $("#example1").DataTable({
 
       ordering: 0,
@@ -496,5 +492,29 @@ function dtable_cargar_seach(s){
 });
 
 
+
+
+ //////////////////////////////////////////////////////////////7//////REPORTES//////////////////////////////////
+
+ ///AJAX DATOS BAR CHART
+function ajax_datos_bar(c){
+      
+  $.ajax({
+    url: "funciones.php",
+    method: "GET",
+    async: false,
+    data: {funcion: "extrae_datos_bar",cc:c},
+    dataType: "json",
+    success:function(respu){ 
+
+        
+    },
+    error: function(xhr, status, error) {
+      alert("Error en la solicitud AJAX: " + status+error); // Mostrar mensaje de error
+      console.error(xhr.responseText); // Mostrar detalle del error en la consola
+  }
+    
+    });
+}
 
 

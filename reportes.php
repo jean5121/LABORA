@@ -22,35 +22,7 @@
     <!-- Main content -->
     <section class="content">
       <div class="container-fluid">
-        <div class="row">
-          <div class="col-12">
-            <!-- interactive chart -->
-            <div class="card card-primary card-outline">
-              <div class="card-header">
-                <h3 class="card-title">
-                  <i class="far fa-chart-bar"></i>
-                  Interactive Area Chart
-                </h3>
 
-                <div class="card-tools">
-                  Real time
-                  <div class="btn-group" id="realtime" data-toggle="btn-toggle">
-                    <button type="button" class="btn btn-default btn-sm active" data-toggle="on">On</button>
-                    <button type="button" class="btn btn-default btn-sm" data-toggle="off">Off</button>
-                  </div>
-                </div>
-              </div>
-              <div class="card-body">
-                <div id="interactive" style="height: 300px;"></div>
-              </div>
-              <!-- /.card-body-->
-            </div>
-            <!-- /.card -->
-
-          </div>
-          <!-- /.col -->
-        </div>
-        <!-- /.row -->
 
         <div class="row">
           <div class="col-md-6">
@@ -111,7 +83,11 @@
               <div class="card-header">
                 <h3 class="card-title">
                   <i class="far fa-chart-bar"></i>
-                  Bar Chart
+                  <span style="margin-left: 10px;"> Año</span>
+                  <!-- Formulario dentro de la cabecera del card -->
+                  <div class="form-group d-inline-block ml-3 mb-0">
+                    <!-- Select con clase pequeña y control de ancho -->
+                    
                 </h3>
 
                 <div class="card-tools">
@@ -122,6 +98,9 @@
                     <i class="fas fa-times"></i>
                   </button>
                 </div>
+                <select class="form-control form-control-sm w-50" id="anio" name="anio" onchange="motrar_barras(this.value)">
+                    
+                  </select>
               </div>
               <div class="card-body">
                 <div id="bar-chart" style="height: 300px;"></div>
@@ -163,13 +142,6 @@
   </div>
   <!-- /.content-wrapper -->
 
-  <footer class="main-footer">
-    <div class="float-right d-none d-sm-block">
-      <b>Version</b> 3.2.0
-    </div>
-    <strong>Copyright &copy; 2014-2021 <a href="https://adminlte.io">AdminLTE.io</a>.</strong> All rights reserved.
-  </footer>
-
   <!-- Control Sidebar -->
   <aside class="control-sidebar control-sidebar-dark">
     <!-- Control sidebar content goes here -->
@@ -177,110 +149,56 @@
   <!-- /.control-sidebar -->
 </div>
 <!-- ./wrapper -->
+<script>
+    // Obtener el select por su ID
+    const selectAnio = document.getElementById("anio");
+
+    // Establecer el año inicial y el año actual
+    const yearStart = 1998;
+    const currentYear = new Date().getFullYear();
+
+    // Generar opciones para cada año desde el año inicial hasta el actual
+    for (let year = yearStart; year <= currentYear; year++) {
+      let option = document.createElement("option");
+      option.value = year;
+      option.text = year;
+      selectAnio.add(option);
+    }
+    document.addEventListener('DOMContentLoaded', function() {
+      // Establecer el primer valor del select como el año actual o el primer año en la lista
+      const primerValor = selectAnio.value || currentYear; // Usar currentYear como valor por defecto
+      motrar_barras(primerValor); });
+
+
+function motrar_barras(anio){
+
+  var bar_data = {
+      data : [[1,10], [2,8], [3,4], [4,13], [5,17], [6,9]],
+      bars: { show: true }
+    }
+    $.plot('#bar-chart', [bar_data], {
+      grid  : {
+        borderWidth: 1,
+        borderColor: '#f3f3f3',
+        tickColor  : '#f3f3f3'
+      },
+      series: {
+        bars: {
+          show: true, barWidth: 0.4, align: 'center',
+        },
+      },
+      colors: ['#3c8dbc'],
+      xaxis : {
+        ticks: [[1,anio], [2,'February'], [3,'March'], [4,anio], [5,'May'], [6,anio]]
+      }
+    })
+}      
+  </script>
+
 
 <script>
   $(function () {
-    /*
-     * Flot Interactive Chart
-     * -----------------------
-     */
-    // We use an inline data source in the example, usually data would
-    // be fetched from a server
-    var data        = [],
-        totalPoints = 100
-
-    function getRandomData() {
-
-      if (data.length > 0) {
-        data = data.slice(1)
-      }
-
-      // Do a random walk
-      while (data.length < totalPoints) {
-
-        var prev = data.length > 0 ? data[data.length - 1] : 50,
-            y    = prev + Math.random() * 10 - 5
-
-        if (y < 0) {
-          y = 0
-        } else if (y > 100) {
-          y = 100
-        }
-
-        data.push(y)
-      }
-
-      // Zip the generated y values with the x values
-      var res = []
-      for (var i = 0; i < data.length; ++i) {
-        res.push([i, data[i]])
-      }
-
-      return res
-    }
-
-    var interactive_plot = $.plot('#interactive', [
-        {
-          data: getRandomData(),
-        }
-      ],
-      {
-        grid: {
-          borderColor: '#f3f3f3',
-          borderWidth: 1,
-          tickColor: '#f3f3f3'
-        },
-        series: {
-          color: '#3c8dbc',
-          lines: {
-            lineWidth: 2,
-            show: true,
-            fill: true,
-          },
-        },
-        yaxis: {
-          min: 0,
-          max: 100,
-          show: true
-        },
-        xaxis: {
-          show: true
-        }
-      }
-    )
-
-    var updateInterval = 500 //Fetch data ever x milliseconds
-    var realtime       = 'on' //If == to on then fetch data every x seconds. else stop fetching
-    function update() {
-
-      interactive_plot.setData([getRandomData()])
-
-      // Since the axes don't change, we don't need to call plot.setupGrid()
-      interactive_plot.draw()
-      if (realtime === 'on') {
-        setTimeout(update, updateInterval)
-      }
-    }
-
-    //INITIALIZE REALTIME DATA FETCHING
-    if (realtime === 'on') {
-      update()
-    }
-    //REALTIME TOGGLE
-    $('#realtime .btn').click(function () {
-      if ($(this).data('toggle') === 'on') {
-        realtime = 'on'
-      }
-      else {
-        realtime = 'off'
-      }
-      update()
-    })
-    /*
-     * END INTERACTIVE CHART
-     */
-
-
+    
     /*
      * LINE CHART
      * ----------
@@ -386,26 +304,6 @@
      * ---------
      */
 
-    var bar_data = {
-      data : [[1,10], [2,8], [3,4], [4,13], [5,17], [6,9]],
-      bars: { show: true }
-    }
-    $.plot('#bar-chart', [bar_data], {
-      grid  : {
-        borderWidth: 1,
-        borderColor: '#f3f3f3',
-        tickColor  : '#f3f3f3'
-      },
-      series: {
-         bars: {
-          show: true, barWidth: 0.5, align: 'center',
-        },
-      },
-      colors: ['#3c8dbc'],
-      xaxis : {
-        ticks: [[1,'January'], [2,'February'], [3,'March'], [4,'April'], [5,'May'], [6,'June']]
-      }
-    })
     /* END BAR CHART */
 
     /*

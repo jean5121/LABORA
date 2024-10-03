@@ -42,6 +42,11 @@ if(isset($_GET['funcion']) && !empty($_GET['funcion'])) {
             $fentrega = $_GET['f'];            
             cambiar_fecha_enrega($boletaid,$fentrega);
             break;
+///REPORTES
+        case 'extrae_datos_bar': 
+            $sem = $_GET['cc'];           
+            extrae_datos_barr($sem);
+            break;
         
     }
 }
@@ -217,6 +222,31 @@ function salirphp(){
     session_start();
     session_destroy();
 }
+
+
+
+//////REPORTES
+function extrae_datos_barr($c){
+    include_once 'conect.php';
+    
+    $Jrespu = array(); 
+    $con =mysqli_connect($host,$user_db,$contra_db,$db);
+    $query = "UPDATE boleta SET fecha_entrega = '$f' WHERE idboleta =$b ;    ";
+    $resultado = mysqli_query($con,$query);
+    if ($resultado && $con->affected_rows > 0) {
+        
+            $Jrespu['success'] = true;
+            $Jrespu['mensaje'] = 'Se cambio la fecha correctamente.';
+            
+    } else {
+        $Jrespu['success'] = false;
+        $Jrespu['mensaje'] = 'No se pudo cambiar la fecha'. mysqli_error($con);
+    }
+    $Jrespu['idboleta'] = $b;
+    echo json_encode($Jrespu);
+    mysqli_close($con);
+}
+
 
 
 ?>
