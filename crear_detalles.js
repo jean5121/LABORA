@@ -506,8 +506,12 @@ function ajax_datos_bar(c){
     data: {funcion: "extrae_datos_bar",cc:c},
     dataType: "json",
     success:function(respu){ 
+        // Llama a la función callback y le pasa los datos obtenidos como parámetro
+      //callback(respu);
 
-        
+     // console.log("Respuesta del servidor:", JSON.stringify(respu, null, 2));
+    //alert(JSON.stringify(respu, null, 2));
+      
     },
     error: function(xhr, status, error) {
       alert("Error en la solicitud AJAX: " + status+error); // Mostrar mensaje de error

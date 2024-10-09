@@ -229,22 +229,42 @@ function salirphp(){
 function extrae_datos_barr($c){
     include_once 'conect.php';
     
+    header('Content-Type: application/json'); // Asegura que la respuesta sea de tipo JSON
+
     $Jrespu = array(); 
-    $con =mysqli_connect($host,$user_db,$contra_db,$db);
-    $query = "UPDATE boleta SET fecha_entrega = '$f' WHERE idboleta =$b ;    ";
-    $resultado = mysqli_query($con,$query);
-    if ($resultado && $con->affected_rows > 0) {
-        
-            $Jrespu['success'] = true;
-            $Jrespu['mensaje'] = 'Se cambio la fecha correctamente.';
-            
-    } else {
-        $Jrespu['success'] = false;
-        $Jrespu['mensaje'] = 'No se pudo cambiar la fecha'. mysqli_error($con);
+    $con = mysqli_connect($host, $user_db, $contra_db, $db);
+
+    // Verifica si la conexión fue exitosa
+    if (!$con) {
+        die(json_encode(["error" => "Error en la conexión a la base de datos: " . mysqli_connect_error()]));
     }
-    $Jrespu['idboleta'] = $b;
-    echo json_encode($Jrespu);
-    mysqli_close($con);
+
+    $query = "SELECT cl.nombre_cli, SUM((bl.precio_total - bl.deuda)) AS monto_total 
+            FROM boleta bl 
+            INNER JOIN clinica cl ON bl.idclinica = cl.idclinica 
+            WHERE YEAR(bl.fecha_crea) = 2024 
+            GROUP BY cl.nombre_cli;";
+    
+    $resultado = mysqli_query($con, $query);
+    
+    if (!$resultado) {
+        die(json_encode(["error" => "Error en la consulta: " . mysqli_error($con)]));
+    }
+
+    $data = [];
+    
+    if ($resultado->num_rows > 0) {
+        // Obtener cada fila y agregarla al array
+        while ($row = $resultado->fetch_assoc()) {
+            $data[] = $row;
+        }
+    }
+    
+    // Cerrar la conexión a la base de datos
+    $con->close();
+    
+    // Convertir el array a formato JSON y mostrarlo
+    echo json_encode($data);
 }
 
 

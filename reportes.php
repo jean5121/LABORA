@@ -1,4 +1,4 @@
-
+<script src="crear_detalles.js"></script>
 <div class="wrapper">
   <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
@@ -98,9 +98,11 @@
                     <i class="fas fa-times"></i>
                   </button>
                 </div>
-                <select class="form-control form-control-sm w-50" id="anio" name="anio" onchange="motrar_barras(this.value)">
+                <select class="form-control form-control-sm w-50" id="yearSelector" name="yearSelector" >
                     
                   </select>
+
+                  <button onclick="ajax_datos_bar('qq')">a</button>
               </div>
               <div class="card-body">
                 <div id="bar-chart" style="height: 300px;"></div>
@@ -151,10 +153,10 @@
 <!-- ./wrapper -->
 <script>
     // Obtener el select por su ID
-    const selectAnio = document.getElementById("anio");
+    const selectAnio = document.getElementById("yearSelector");
 
     // Establecer el año inicial y el año actual
-    const yearStart = 1998;
+    const yearStart = 2020;
     const currentYear = new Date().getFullYear();
 
     // Generar opciones para cada año desde el año inicial hasta el actual
@@ -170,29 +172,111 @@
       motrar_barras(primerValor); });
 
 
-function motrar_barras(anio){
+// function motrar_barras(anio){
+  
+//   var bar_data = {
+//       data : [[1,10], [2,8], [3,4], [4,13], [5,17], [6,9]],
+//       bars: { show: true }
+//     }
+//     $.plot('#bar-chart', [bar_data], {
+//       grid  : {
+//         borderWidth: 1,
+//         borderColor: '#f3f3f3',
+//         tickColor  : '#f3f3f3'
+//       },
+//       series: {
+//         bars: {
+//           show: true, barWidth: 0.4, align: 'center',
+//         },
+//       },
+//       colors: ['#3c8dbc'],
+//       xaxis : {
+//         ticks: [[1,anio], [2,'February'], [3,'March'], [4,anio], [5,'May'], [6,anio]]
+//       }
+//     })
+// }
 
-  var bar_data = {
-      data : [[1,10], [2,8], [3,4], [4,13], [5,17], [6,9]],
-      bars: { show: true }
-    }
-    $.plot('#bar-chart', [bar_data], {
-      grid  : {
-        borderWidth: 1,
-        borderColor: '#f3f3f3',
-        tickColor  : '#f3f3f3'
-      },
-      series: {
-        bars: {
-          show: true, barWidth: 0.4, align: 'center',
+// Función para mostrar el gráfico de barras
+function mostrar_barras_borrar(c) {
+    // Creamos una variable para almacenar los datos JSON
+    var datos = [];
+
+    // Realizamos la solicitud AJAX para obtener los datos
+    $.ajax({
+        url: "funciones.php",  // La URL del servidor
+        method: "GET",         // Usamos el método GET
+        async: false,          // Sincrónico para esperar los datos antes de continuar
+        data: {funcion: "extrae_datos_bar", cc: c},  // Enviamos el código del cliente y el año
+        dataType: "json",      // Indicamos que esperamos un JSON como respuesta
+        success: function(respu) {
+            // Guardamos la respuesta en la variable `datos`
+            datos = respu;
+            console.log("Respuesta del servidor:", respu);
+            // Imprimimos los datos en la consola para ver lo que recibimos
+            console.log("Datos recibidos:", datos);
+
+            // Luego procesamos los datos para el gráfico
+            var bar_data = {
+                data: [],
+                bars: { show: true }
+            };
+
+            // Iteramos sobre los datos y los agregamos al gráfico
+            datos.forEach((item, index) => {
+                var mes = index + 1;  // Asignamos un índice que va del 1 en adelante
+                var monto = parseFloat(item.monto_total);  // Aseguramos que el monto sea un número
+                bar_data.data.push([mes, monto]);  // Añadimos el dato en el formato [mes, monto]
+            });
+
+            // Configuramos el gráfico con los datos recibidos
+            $.plot('#bar-chart', [bar_data], {
+                grid: {
+                    borderWidth: 1,
+                    borderColor: '#f3f3f3',
+                    tickColor: '#f3f3f3'
+                },
+                series: {
+                    bars: {
+                        show: true,
+                        barWidth: 0.4,
+                        align: 'center',
+                    },
+                },
+                colors: ['#3c8dbc'],
+                xaxis: {
+                    ticks: datos.map((item, index) => [index + 1, item.nombre_cli]),  // Asignamos el nombre del cliente a los ticks
+                    tickLength: 0,  // Para evitar que los números en el eje X se solapen con los nombres
+                    rotateTicks: 45  // Rotamos los nombres de los clientes si es necesario
+                }
+            });
         },
-      },
-      colors: ['#3c8dbc'],
-      xaxis : {
-        ticks: [[1,anio], [2,'February'], [3,'March'], [4,anio], [5,'May'], [6,anio]]
-      }
-    })
-}      
+        error: function(xhr, status, error) {
+            alert("Error en la solicitud AJAX: " + status + error);
+            console.error(xhr.responseText);  // Mostramos el error en la consola si falla
+        }
+    });
+}
+
+// Evento que captura el cambio en el selector de año
+$(document).ready(function() {
+    // Asume que el código del cliente es conocido (puedes pasarlo dinámicamente si es necesario)
+    var cliente_codigo = 'cliente_codigo';  // Cambia esto por el valor correcto o pásalo dinámicamente
+
+    // Capturamos el evento de cambio en el selector de año
+    $('#yearSelector').change(function() {
+        // Obtenemos el año seleccionado
+        var selectedYear = $(this).val();
+        
+        // Llamamos a la función `mostrar_barras` con el año seleccionado
+        mostrar_barras_borrar(selectedYear);
+    });
+
+    // Inicializamos el gráfico con el año predeterminado al cargar la página
+    var defaultYear = $('#yearSelector').val();  // Obtenemos el año por defecto
+    mostrar_barras_borrar(defaultYear);  // Muestra el gráfico con el año inicial
+});
+
+
   </script>
 
 
