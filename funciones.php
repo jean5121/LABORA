@@ -238,12 +238,15 @@ function extrae_datos_barr($c){
     if (!$con) {
         die(json_encode(["error" => "Error en la conexión a la base de datos: " . mysqli_connect_error()]));
     }
-
+    $anio = $c;
+    $mes = 0;
     $query = "SELECT cl.nombre_cli, SUM((bl.precio_total - bl.deuda)) AS monto_total 
-            FROM boleta bl 
-            INNER JOIN clinica cl ON bl.idclinica = cl.idclinica 
-            WHERE YEAR(bl.fecha_crea) = 2024 
-            GROUP BY cl.nombre_cli;";
+                FROM boleta bl 
+                INNER JOIN clinica cl ON bl.idclinica = cl.idclinica 
+                WHERE ($anio = 1 OR YEAR(bl.fecha_crea) = $anio) 
+                AND ($mes = 0 OR MONTH(bl.fecha_crea) = $mes) 
+                GROUP BY cl.nombre_cli 
+                ORDER BY monto_total DESC";
     
     $resultado = mysqli_query($con, $query);
     

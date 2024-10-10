@@ -77,13 +77,13 @@
           </div>
           <!-- /.col -->
 
-          <div class="col-md-6">
+          <div class="col-md-12">
             <!-- Bar chart -->
             <div class="card card-primary card-outline">
               <div class="card-header">
                 <h3 class="card-title">
                   <i class="far fa-chart-bar"></i>
-                  <span style="margin-left: 10px;"> Año</span>
+                  <span style="margin-left: 10px;"> INGRESOS POR CLINICA</span>
                   <!-- Formulario dentro de la cabecera del card -->
                   <div class="form-group d-inline-block ml-3 mb-0">
                     <!-- Select con clase pequeña y control de ancho -->
@@ -98,11 +98,9 @@
                     <i class="fas fa-times"></i>
                   </button>
                 </div>
-                <select class="form-control form-control-sm w-50" id="yearSelector" name="yearSelector" >
-                    
+                <select class="form-control form-control-sm w-25" id="yearSelector" name="yearSelector" >
+                    <option value="1">GLOBAL</option>
                   </select>
-
-                  <button onclick="ajax_datos_bar('qq')">a</button>
               </div>
               <div class="card-body">
                 <div id="bar-chart" style="height: 300px;"></div>
@@ -166,10 +164,7 @@
       option.text = year;
       selectAnio.add(option);
     }
-    document.addEventListener('DOMContentLoaded', function() {
-      // Establecer el primer valor del select como el año actual o el primer año en la lista
-      const primerValor = selectAnio.value || currentYear; // Usar currentYear como valor por defecto
-      motrar_barras(primerValor); });
+    
 
 
 // function motrar_barras(anio){
@@ -210,11 +205,9 @@ function mostrar_barras_borrar(c) {
         dataType: "json",      // Indicamos que esperamos un JSON como respuesta
         success: function(respu) {
             // Guardamos la respuesta en la variable `datos`
-            datos = respu;
-            console.log("Respuesta del servidor:", respu);
-            // Imprimimos los datos en la consola para ver lo que recibimos
-            console.log("Datos recibidos:", datos);
-
+            var datos = Array.isArray(respu) ? respu : [respu];
+            //datos = respu;
+            
             // Luego procesamos los datos para el gráfico
             var bar_data = {
                 data: [],
@@ -233,20 +226,27 @@ function mostrar_barras_borrar(c) {
                 grid: {
                     borderWidth: 1,
                     borderColor: '#f3f3f3',
-                    tickColor: '#f3f3f3'
+                    tickColor: '#f3f3f3',
+                    
                 },
                 series: {
                     bars: {
                         show: true,
-                        barWidth: 0.4,
+                        barWidth: 0.2,
                         align: 'center',
                     },
                 },
                 colors: ['#3c8dbc'],
                 xaxis: {
-                    ticks: datos.map((item, index) => [index + 1, item.nombre_cli]),  // Asignamos el nombre del cliente a los ticks
+                    ticks: [...datos.map((item, index) => [index + 1, item.nombre_cli+'<br> S/.('+item.monto_total+')']),
+                    [datos.length + 1, 'Tick Ficticio 1'],  // Primer tick ficticio
+                    [datos.length + 2, 'Tick Ficticio 2'] ], // Segundo tick ficticio PARA QUE EL GRAFICO NO MUERA SI SE TRAEN MENOS DE 3 DATOS
                     tickLength: 0,  // Para evitar que los números en el eje X se solapen con los nombres
-                    rotateTicks: 45  // Rotamos los nombres de los clientes si es necesario
+                    rotateTicks: 45,  // Rotamos los nombres de los clientes si es necesario
+                    font: {
+                            size: 14, // Ajusta este valor según lo necesites
+                            color: '#FFFFFF'
+                        }
                 }
             });
         },
