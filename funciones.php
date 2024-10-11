@@ -44,8 +44,9 @@ if(isset($_GET['funcion']) && !empty($_GET['funcion'])) {
             break;
 ///REPORTES
         case 'extrae_datos_bar': 
-            $sem = $_GET['cc'];           
-            extrae_datos_barr($sem);
+            $a = $_GET['cc'];
+            $m = $_GET['dd'];           
+            extrae_datos_barr($a,$m);
             break;
         
     }
@@ -226,20 +227,19 @@ function salirphp(){
 
 
 //////REPORTES
-function extrae_datos_barr($c){
+function extrae_datos_barr($a,$m){
     include_once 'conect.php';
     
     header('Content-Type: application/json'); // Asegura que la respuesta sea de tipo JSON
 
-    $Jrespu = array(); 
     $con = mysqli_connect($host, $user_db, $contra_db, $db);
 
     // Verifica si la conexión fue exitosa
     if (!$con) {
         die(json_encode(["error" => "Error en la conexión a la base de datos: " . mysqli_connect_error()]));
     }
-    $anio = $c;
-    $mes = 0;
+    $anio = $a;
+    $mes = $m;
     $query = "SELECT cl.nombre_cli, SUM((bl.precio_total - bl.deuda)) AS monto_total 
                 FROM boleta bl 
                 INNER JOIN clinica cl ON bl.idclinica = cl.idclinica 
