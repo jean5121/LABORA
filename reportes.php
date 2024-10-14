@@ -130,9 +130,22 @@
                     <i class="fas fa-times"></i>
                   </button>
                 </div>
+                <div class="d-flex align-items-center">
+                  <select class="form-control form-control-sm w-25" id="yearSelectorDona" name="yearSelectorDona" >
+                      <option value="1">AÑO TODOS</option>
+                  </select>
+                  <select class="form-control form-control-sm w-25" id="messelectorDona" name="messelectorDona" >
+                      <option value="0">MES TODOS</option>
+                  </select>
+                  </div>
               </div>
               <div class="card-body">
                 <div id="donut-chart" style="height: 300px;"></div>
+                <div id="details" style="margin-left: 20px;">
+        <h4>Detalles</h4>
+        <br><p>fdasfasdfasd</p>
+        <div id="details-content"></div>
+    </div>
               </div>
               <!-- /.card-body-->
             </div>
@@ -155,7 +168,9 @@
 </div>
 <!-- ./wrapper -->
 <script>
-    // Obtener el select por su ID
+    // Obtener el select por su ID yearSelectorDona
+    const selectAnioDona = document.getElementById("yearSelectorDona");
+
     const selectAnio = document.getElementById("yearSelector");
     // Establecer el año inicial y el año actual
     const yearStart = 2020;
@@ -166,8 +181,11 @@
       option.value = year;
       option.text = year;
       selectAnio.add(option);
+      selectAnioDona.add(option);
     }
 // GENERADOR MESES    
+const selectMesDona = document.getElementById("messelectorDona");
+
 const selectMes = document.getElementById("messelector");
 // Nombres de los meses en español
 const meses = [
@@ -181,6 +199,7 @@ for (let i = 0; i < meses.length; i++) {
     option.value = i + 1; // Valores del 1 al 12
     option.text = meses[i]; // Nombres de los meses en español
     selectMes.add(option);
+    selectMesDona.add(option);
 }
     
 
@@ -251,7 +270,72 @@ function mostrar_barras_borrar(A,M) {
         }
     });
 }
+function mostrar_Donas_borrar(A,M) {
+    // Creamos una variable para almacenar los datos JSON
+    var datos = [];
 
+    // Realizamos la solicitud AJAX para obtener los datos
+    $.ajax({
+        url: "funciones.php",  // La URL del servidor
+        method: "GET",         // Usamos el método GET
+        async: false,          // Sincrónico para esperar los datos antes de continuar
+        data: {funcion: "extrae_datos_bar", cc:A,dd:M},  // Enviamos el código del cliente y el año
+        dataType: "json",      // Indicamos que esperamos un JSON como respuesta
+        success: function(respu) {
+            // Guardamos la respuesta en la variable `datos`
+            var datos = Array.isArray(respu) ? respu : [respu];
+            //datos = respu;
+            //console.log('Datos recibidos:', respu);
+            // Luego procesamos los datos para el gráfico
+            var bar_data = {
+                data: [],
+                bars: { show: true }
+            };
+
+            // Iteramos sobre los datos y los agregamos al gráfico
+            datos.forEach((item, index) => {
+                var mes = index + 1;  // Asignamos un índice que va del 1 en adelante
+                var monto = parseFloat(item.monto_total);  // Aseguramos que el monto sea un número
+                bar_data.data.push([mes, monto]);  // Añadimos el dato en el formato [mes, monto]
+            });
+
+            // Configuramos el gráfico con los datos recibidos
+            $.plot('#bar-chart', [bar_data], {
+                grid: {
+                    borderWidth: 1,
+                    borderColor: '#f3f3f3',
+                    tickColor: '#f3f3f3',
+                    margin: {
+                      bottom: 30 // Añadir espacio extra en la parte inferior
+                    }
+                    
+                },
+                series: {
+                    bars: {
+                        show: true,
+                        barWidth: 0.2,
+                        align: 'center',
+                    },
+                },
+                colors: ['#3c8dbc'],
+                xaxis: {
+                    ticks: datos.map((item, index) => [index + 1,`${item.nombre_cli}<br>S/.(${item.monto_total})`]),
+                     // Segundo tick ficticio PARA QUE EL GRAFICO NO MUERA SI SE TRAEN MENOS DE 3 DATOS
+                    tickLength: 1,  // Para evitar que los números en el eje X se solapen con los nombres
+                    rotateTicks: 45,  // Rotamos los nombres de los clientes si es necesario
+              
+                    font: {
+                            size: 14, // Ajusta este valor según lo necesites                           
+                        }
+                }
+            });
+        },
+        error: function(xhr, status, error) {
+            alert("Error en la solicitud AJAX: " + status + error);
+            console.error(xhr.responseText);  // Mostramos el error en la consola si falla
+        }
+    });
+}
 // Evento que captura el cambio en el selector de año
 $(document).ready(function() {
   // Inicializa las variables con los valores seleccionados en los selectores
@@ -413,6 +497,7 @@ $(document).ready(function() {
         color: '#00c0ef'
       }
     ]
+
     $.plot('#donut-chart', donutData, {
       series: {
         pie: {
@@ -429,9 +514,24 @@ $(document).ready(function() {
         }
       },
       legend: {
-        show: false
+        show: false,
+
       }
     })
+    // Agregar detalles al lado
+    function updateDetails() {
+    var total = donutData.reduce((sum, item) => sum + item.data, 0);
+    var detailsContent = 'Total Muestras: ' + total + '<br>';
+    donutData.forEach(function(item) {
+        var percentage = ((item.data / total) * 100).toFixed(1); // Calcular el porcentaje
+        detailsContent += '<strong>' + item.label + ':</strong> '
+                         + item.data + ' muestras (' + percentage + '%)<br>';
+    });
+    $('#details-content').html(detailsContent);
+}
+
+// Llamar a la función para actualizar detalles
+updateDetails();
     /*
      * END DONUT CHART
      */

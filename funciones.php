@@ -271,5 +271,49 @@ function extrae_datos_barr($a,$m){
 }
 
 
+function extrae_datos_dona($a,$m){
+    include_once 'conect.php';
+    
+    header('Content-Type: application/json'); // Asegura que la respuesta sea de tipo JSON
+
+    $con = mysqli_connect($host, $user_db, $contra_db, $db);
+
+    // Verifica si la conexión fue exitosa
+    if (!$con) {
+        die(json_encode(["error" => "Error en la conexión a la base de datos: " . mysqli_connect_error()]));
+    }
+    $anio = $a;
+    $mes = $m;
+    $query = "SELECT cl.nombre_cli, SUM(dbl.cantidad) AS cantidad_pieza 
+                FROM detalle_boleta dbl 
+                INNER JOIN boleta bl	on dbl.idvoleta = bl.idboleta
+                INNER JOIN clinica cl ON bl.idclinica = cl.idclinica 
+                WHERE ($anio = 1 OR YEAR(bl.fecha_crea) = $anio) 
+                AND ($mes = 0 OR MONTH(bl.fecha_crea) = $mes) 
+                GROUP BY cl.nombre_cli 
+                ORDER BY cantidad_pieza DESC";
+    
+    $resultado = mysqli_query($con, $query);
+    
+    if (!$resultado) {
+        die(json_encode(["error" => "Error en la consulta: " . mysqli_error($con)]));
+    }
+
+    $data = [];
+    
+    if ($resultado->num_rows > 0) {
+        // Obtener cada fila y agregarla al array
+        while ($row = $resultado->fetch_assoc()) {
+            $data[] = $row;
+        }
+    }
+    
+    // Cerrar la conexión a la base de datos
+    $con->close();
+    
+    // Convertir el array a formato JSON y mostrarlo
+    echo json_encode($data);
+}
+
 
 ?>
