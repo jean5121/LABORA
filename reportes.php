@@ -25,13 +25,17 @@
 
 
         <div class="row">
-          <div class="col-md-6">
+          <div class="col-md-12">
             <!-- Line chart -->
             <div class="card card-primary card-outline">
               <div class="card-header">
                 <h3 class="card-title">
                   <i class="far fa-chart-bar"></i>
-                  Line Chart
+                  <span style="margin-left: 10px;"> LINE CHART</span>
+                  <!-- Formulario dentro de la cabecera del card -->
+                  <div class="form-group d-inline-block ml-3 mb-0">
+                    <!-- Select con clase pequeña y control de ancho -->
+                    
                 </h3>
 
                 <div class="card-tools">
@@ -42,6 +46,14 @@
                     <i class="fas fa-times"></i>
                   </button>
                 </div>
+                <div class="d-flex align-items-center">
+                  <select class="form-control form-control-sm w-25" id="yearSelector" name="yearSelector" >
+                      <option value="1">AÑO TODOS</option>
+                  </select>
+                  <select class="form-control form-control-sm w-25" id="messelector" name="messelector" >
+                      <option value="0">MES TODOS</option>
+                  </select>
+                  </div>
               </div>
               <div class="card-body">
                 <div id="line-chart" style="height: 300px;"></div>
@@ -98,6 +110,7 @@
                     <i class="fas fa-times"></i>
                   </button>
                 </div>
+
                   <div class="d-flex align-items-center">
                   <select class="form-control form-control-sm w-25" id="yearSelector" name="yearSelector" >
                       <option value="1">AÑO TODOS</option>
@@ -106,6 +119,7 @@
                       <option value="0">MES TODOS</option>
                   </select>
                   </div>
+
               </div>
               <div class="card-body">
                 <div id="bar-chart" style="height: 300px;"></div>
@@ -119,7 +133,8 @@
               <div class="card-header">
                 <h3 class="card-title">
                   <i class="far fa-chart-bar"></i>
-                  Donut Chart
+                  <span style="margin-left: 10px;">Donut Chartv </span>
+                  <div class="form-group d-inline-block ml-3 mb-0">
                 </h3>
 
                 <div class="card-tools">
@@ -130,6 +145,7 @@
                     <i class="fas fa-times"></i>
                   </button>
                 </div>
+
                 <div class="d-flex align-items-center">
                   <select class="form-control form-control-sm w-25" id="yearSelectorDona" name="yearSelectorDona" >
                       <option value="1">AÑO TODOS</option>
@@ -138,13 +154,33 @@
                       <option value="0">MES TODOS</option>
                   </select>
                   </div>
+
               </div>
               <div class="card-body">
                 <div id="donut-chart" style="height: 300px;"></div>
                 <div id="details" style="margin-left: 20px;">
         <h4>Detalles</h4>
-        <br><p>fdasfasdfasd</p>
-        <div id="details-content"></div>
+        <div id="details-content">
+            <table class="table table-striped table-bordered" id="tabladetallesdona">
+                <thead class="thead-dark">
+                    <tr>
+                        <th>CLINICA</th>
+                        <th>CANTIDAD DE PEIZAS</th>
+                        <th>PORCENTAJE</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Las filas se agregarán aquí -->
+                </tbody>
+                <tfoot class="thead-dark">
+            <tr>
+                <th>Total</th>
+                <th id="totalPiezas"></th>
+                <th id="totalPorcentaje"></th>
+            </tr>
+        </tfoot>
+            </table>
+        </div>
     </div>
               </div>
               <!-- /.card-body-->
@@ -168,9 +204,15 @@
 </div>
 <!-- ./wrapper -->
 <script>
+
+function generarColorPastelOscuro() {
+    const r = Math.floor(Math.random() * 128) + 50; // Rango de 50 a 178
+    const g = Math.floor(Math.random() * 128) + 50; // Rango de 50 a 178
+    const b = Math.floor(Math.random() * 128) + 50; // Rango de 50 a 178
+    return '#' + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
+}
     // Obtener el select por su ID yearSelectorDona
     const selectAnioDona = document.getElementById("yearSelectorDona");
-
     const selectAnio = document.getElementById("yearSelector");
     // Establecer el año inicial y el año actual
     const yearStart = 2020;
@@ -181,7 +223,11 @@
       option.value = year;
       option.text = year;
       selectAnio.add(option);
-      selectAnioDona.add(option);
+    
+      let optiondona = document.createElement("option");
+      optiondona.value = year;
+      optiondona.text = year;
+      selectAnioDona.add(optiondona);
     }
 // GENERADOR MESES    
 const selectMesDona = document.getElementById("messelectorDona");
@@ -199,7 +245,12 @@ for (let i = 0; i < meses.length; i++) {
     option.value = i + 1; // Valores del 1 al 12
     option.text = meses[i]; // Nombres de los meses en español
     selectMes.add(option);
-    selectMesDona.add(option);
+    
+//----------------------------------------
+    let optiondona = document.createElement("option");
+    optiondona.value = i + 1; // Valores del 1 al 12
+    optiondona.text = meses[i]; // Nombres de los meses en español
+    selectMesDona.add(optiondona);
 }
     
 
@@ -272,7 +323,7 @@ function mostrar_barras_borrar(A,M) {
 }
 function mostrar_Donas_borrar(A,M) {
     // Creamos una variable para almacenar los datos JSON
-    var datos = [];
+
 
     // Realizamos la solicitud AJAX para obtener los datos
     $.ajax({
@@ -282,53 +333,60 @@ function mostrar_Donas_borrar(A,M) {
         data: {funcion: "extrae_datos_bar", cc:A,dd:M},  // Enviamos el código del cliente y el año
         dataType: "json",      // Indicamos que esperamos un JSON como respuesta
         success: function(respu) {
-            // Guardamos la respuesta en la variable `datos`
-            var datos = Array.isArray(respu) ? respu : [respu];
-            //datos = respu;
-            //console.log('Datos recibidos:', respu);
-            // Luego procesamos los datos para el gráfico
-            var bar_data = {
-                data: [],
-                bars: { show: true }
+         // Transformar la respuesta en donutData
+        var donutData = respu.map(function(item) {
+          var color = generarColorPastelOscuro(); // Generar un color
+            return {
+                label: item.nombre_cli,        // Nombre del cliente
+                data: parseFloat(item.monto_total), // Monto total como número
+                color:color // Color aleatorio
             };
+        });
 
-            // Iteramos sobre los datos y los agregamos al gráfico
-            datos.forEach((item, index) => {
-                var mes = index + 1;  // Asignamos un índice que va del 1 en adelante
-                var monto = parseFloat(item.monto_total);  // Aseguramos que el monto sea un número
-                bar_data.data.push([mes, monto]);  // Añadimos el dato en el formato [mes, monto]
-            });
-
-            // Configuramos el gráfico con los datos recibidos
-            $.plot('#bar-chart', [bar_data], {
-                grid: {
-                    borderWidth: 1,
-                    borderColor: '#f3f3f3',
-                    tickColor: '#f3f3f3',
-                    margin: {
-                      bottom: 30 // Añadir espacio extra en la parte inferior
-                    }
-                    
-                },
-                series: {
-                    bars: {
+        // Graficar el donut chart
+        $.plot('#donut-chart', donutData, {
+            series: {
+                pie: {
+                    show: true,
+                    radius: 1,
+                    innerRadius: 0.5,
+                    label: {
                         show: true,
-                        barWidth: 0.2,
-                        align: 'center',
-                    },
-                },
-                colors: ['#3c8dbc'],
-                xaxis: {
-                    ticks: datos.map((item, index) => [index + 1,`${item.nombre_cli}<br>S/.(${item.monto_total})`]),
-                     // Segundo tick ficticio PARA QUE EL GRAFICO NO MUERA SI SE TRAEN MENOS DE 3 DATOS
-                    tickLength: 1,  // Para evitar que los números en el eje X se solapen con los nombres
-                    rotateTicks: 45,  // Rotamos los nombres de los clientes si es necesario
-              
-                    font: {
-                            size: 14, // Ajusta este valor según lo necesites                           
-                        }
+                        radius: 2 / 3,
+                        formatter: labelFormatter,
+                        threshold: 0.1
+                    }
                 }
-            });
+            },
+            legend: {
+                show: false,
+            }
+    })
+// Limpiar el cuerpo de la tabla
+$('#tabladetallesdona tbody').empty();
+// Calcular el total y agregar filas a la tabla
+var total = donutData.reduce((sum, item) => sum + item.data, 0);
+    donutData.forEach(function(item) {
+        var percentage = ((item.data / total) * 100).toFixed(1); // Calcular el porcentaje
+
+        // Crear un círculo del color generado
+        var colorCircle = '<span style="display: inline-block; width: 10px; height: 10px; border-radius: 50%; background-color: ' + item.color + '; margin-right: 5px;"></span>';
+
+        // Crear una nueva fila
+        var newRow = '<tr>' +
+                    '<td>' + colorCircle + item.label + '</td>' +
+                    '<td>' + item.data + '</td>' +
+                    '<td>' + percentage + '%</td>' +
+                    '</tr>';
+
+        // Agregar la nueva fila al cuerpo de la tabla
+        $('#tabladetallesdona tbody').append(newRow);
+    });
+
+    // Mostrar el total en la fila de pie de tabla
+    $('#totalPiezas').text(total);
+    $('#totalPorcentaje').text('100%'); // El porcentaje total es siempre 100%
+
         },
         error: function(xhr, status, error) {
             alert("Error en la solicitud AJAX: " + status + error);
@@ -338,6 +396,7 @@ function mostrar_Donas_borrar(A,M) {
 }
 // Evento que captura el cambio en el selector de año
 $(document).ready(function() {
+  ///----------ACTUALIZA PARA EL GRAFICO DE BARRAS
   // Inicializa las variables con los valores seleccionados en los selectores
     var selectedYear = $('#yearSelector').val();
     var selectedMonth = $('#messelector').val();
@@ -356,9 +415,33 @@ $(document).ready(function() {
         // Llamamos a la función `mostrar_barras` con el año seleccionado
         mostrar_barras_borrar(selectedYear,selectedMonth);
     });
-    // Inicializamos el gráfico con el año predeterminado al cargar la página
-    
+    // Inicializamos el gráfico con el año predeterminado al cargar la página 
     mostrar_barras_borrar(selectedYear,selectedMonth);  // Muestra el gráfico con el año inicial
+
+
+  ///----------ACTUALIZA PARA EL GRAFICO DE DONAAA
+  // Inicializa las variables con los valores seleccionados en los selectores
+  var selectedYearDona = $('#yearSelectorDona').val();
+    var selectedMonthDona = $('#messelectorDona').val();
+    // Capturamos el evento de cambio en el selector de año
+    $('#yearSelectorDona').change(function() {
+        // Obtenemos el año seleccionado
+        selectedYearDona = $(this).val();
+        selectedMonthDona = $('#messelectorDona').val();      
+        // Llamamos a la función `mostrar_barras` con el año seleccionado
+        mostrar_Donas_borrar(selectedYearDona,selectedMonthDona);
+    });
+    $('#messelectorDona').change(function() {
+        // Obtenemos el año seleccionado
+        selectedMonthDona = $(this).val(); 
+        selectedYearDona = $('#yearSelectorDona').val();
+        // Llamamos a la función `mostrar_barras` con el año seleccionado
+        mostrar_Donas_borrar(selectedYearDona,selectedMonthDona);
+    });
+    // Inicializamos el gráfico con el año predeterminado al cargar la página 
+    mostrar_Donas_borrar(selectedYearDona,selectedMonthDona);  // Muestra el gráfico con el año inicial
+
+    
 });
 
 
@@ -375,20 +458,30 @@ $(document).ready(function() {
     //LINE randomly generated data
 
     var sin = [],
-        cos = []
-    for (var i = 0; i < 14; i += 0.5) {
+        cos = [],
+        tan = []
+    for (var i = 0; i <= 12; i += 0.5) {
       sin.push([i, Math.sin(i)])
       cos.push([i, Math.cos(i)])
+      tan.push([i, i/2])
+
     }
     var line_data1 = {
       data : sin,
-      color: '#3c8dbc'
+      color:generarColorPastelOscuro(),
+      label: 'Seno'
     }
     var line_data2 = {
       data : cos,
-      color: '#00c0ef'
+      color: generarColorPastelOscuro(),
+      label: 'Coseno' 
     }
-    $.plot('#line-chart', [line_data1, line_data2], {
+    var line_data3 = {
+      data : tan,
+      color: generarColorPastelOscuro(),
+      label: 'tan' 
+    }
+    $.plot('#line-chart', [line_data1, line_data2,line_data3], {
       grid  : {
         hoverable  : true,
         borderColor: '#f3f3f3',
@@ -412,7 +505,9 @@ $(document).ready(function() {
         show: true
       },
       xaxis : {
-        show: true
+        show: true,
+        min: 1,  // Establecer el valor mínimo del eje X
+        max: 12  // Establecer el valor máximo del eje X
       }
     })
     //Initialize tooltip on hover
@@ -466,70 +561,7 @@ $(document).ready(function() {
       }
     })
 
-    /* END AREA CHART */
-
-    /*
-     * BAR CHART
-     * ---------
-     */
-
-    /* END BAR CHART */
-
-    /*
-     * DONUT CHART
-     * -----------
-     */
-
-    var donutData = [
-      {
-        label: 'Series2',
-        data : 30,
-        color: '#3c8dbc'
-      },
-      {
-        label: 'Series3',
-        data : 20,
-        color: '#0073b7'
-      },
-      {
-        label: 'Series4',
-        data : 50,
-        color: '#00c0ef'
-      }
-    ]
-
-    $.plot('#donut-chart', donutData, {
-      series: {
-        pie: {
-          show       : true,
-          radius     : 1,
-          innerRadius: 0.5,
-          label      : {
-            show     : true,
-            radius   : 2 / 3,
-            formatter: labelFormatter,
-            threshold: 0.1
-          }
-
-        }
-      },
-      legend: {
-        show: false,
-
-      }
-    })
-    // Agregar detalles al lado
-    function updateDetails() {
-    var total = donutData.reduce((sum, item) => sum + item.data, 0);
-    var detailsContent = 'Total Muestras: ' + total + '<br>';
-    donutData.forEach(function(item) {
-        var percentage = ((item.data / total) * 100).toFixed(1); // Calcular el porcentaje
-        detailsContent += '<strong>' + item.label + ':</strong> '
-                         + item.data + ' muestras (' + percentage + '%)<br>';
-    });
-    $('#details-content').html(detailsContent);
-}
-
+    
 // Llamar a la función para actualizar detalles
 updateDetails();
     /*

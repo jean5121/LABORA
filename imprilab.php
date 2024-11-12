@@ -34,7 +34,7 @@
     ?>
     <div class="ticket">
         <pre>
-BOLETA C-<?php echo $bol;?> <?php echo PHP_EOL; ?>
+<?php echo "\x1B\X21\X10"; ?>BOLETA C-<?php echo $bol;?> <?php echo "\x1B\X21\X10"; ?><?php echo PHP_EOL; ?>
 FECHA ENTREGA:<?php echo $row['fentrega'];?> <?php echo PHP_EOL; ?>
 Clinic:<?php echo $row['nombre_cli']."(".$row['telefono_cli'].")";?>
 <?php echo PHP_EOL; ?>
