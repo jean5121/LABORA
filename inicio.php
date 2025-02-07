@@ -59,7 +59,7 @@
         <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
       </li>
       <li class="nav-item d-none d-sm-inline-block">
-        <a href="inicio.php?modulo=voletas" class="nav-link">INICIO</a>
+        <a onclick="campana('aa')" class="nav-link" style="cursor: pointer;">INICIO</a>
       </li>
     </ul>
 
@@ -71,15 +71,15 @@
       <?php 
       include_once 'conect.php';
       $con =mysqli_connect($host,$user_db,$contra_db,$db);
-      $query = "SELECT  entregas_hoy.cantidad_entregas AS hoy,
-                        entregas_manana.cantidad_entregas AS manana,
-                        entregas_pasado_manana.cantidad_entregas AS pasado_manana
-                  FROM 
-                      (SELECT COUNT(*) AS cantidad_entregas FROM boleta WHERE fecha_entrega = CURDATE() AND estado_entrega=0) AS entregas_hoy
-                  JOIN 
-                      (SELECT COUNT(*) AS cantidad_entregas FROM boleta WHERE fecha_entrega = DATE_ADD(CURDATE(), INTERVAL 1 DAY) AND estado_entrega=0) AS entregas_manana
-                  JOIN 
-                      (SELECT COUNT(*) AS cantidad_entregas FROM boleta WHERE fecha_entrega = DATE_ADD(CURDATE(), INTERVAL 2 DAY) AND estado_entrega=0) AS entregas_pasado_manana;";
+      $query = "SELECT 
+    COUNT(CASE WHEN fecha_entrega = CURDATE() THEN 1 END) AS hoy,
+    COUNT(CASE WHEN fecha_entrega = DATE_ADD(CURDATE(), INTERVAL 1 DAY) THEN 1 END) AS manana,
+    COUNT(CASE WHEN fecha_entrega = DATE_ADD(CURDATE(), INTERVAL 2 DAY) THEN 1 END) AS pasado_manana
+FROM boleta
+WHERE 
+    fecha_entrega BETWEEN CURDATE() AND DATE_ADD(CURDATE(), INTERVAL 2 DAY)
+    AND estado_entrega = 0;
+";
       $respuesta = mysqli_query($con,$query);
       $row = mysqli_fetch_assoc($respuesta);
       $tot_3dias = $row['hoy']+$row['manana']+$row['pasado_manana'];
@@ -88,7 +88,7 @@
       <li class="nav-item dropdown">
         <a class="nav-link" data-toggle="dropdown" href="#">
           <i class="far fa-bell" style="font-size: 32px;color:#ffeeba"></i>
-          <span class="badge badge-warning navbar-badge"><b style="font-size:17px ;"><?php echo $tot_3dias ?></b></span>
+          <span class="badge badge-danger navbar-badge"><b style="font-size:17px ;"><?php echo $tot_3dias ?></b></span>
         </a>
         <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
           <span class="dropdown-item dropdown-header"><b style="color: salmon;font-size:17px"><?php echo $tot_3dias ?></b> PENDIENTES</span>
@@ -128,7 +128,7 @@
   <!-- Main Sidebar Container -->
   <aside class="main-sidebar sidebar-dark-primary elevation-4">
     <!-- Brand Logo -->
-    <a href="inicio.php?modulo=voletas" class="brand-link">
+    <a onclick="campana('aa')" class="brand-link" style="cursor: pointer;">
       <img src="dist/img/AdminLTELogo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
       <span class="brand-text font-weight-light">LABORATORIO</span>
     </a>
@@ -161,7 +161,7 @@
             </a>
             <ul class="nav nav-treeview">
               <li class="nav-item">
-                <a href="inicio.php?modulo=voletas" class="nav-link <?php echo ($modulo=="voletas"||$modulo=="")?"active":" ";?>">
+                <a onclick="campana('aa')"  class="nav-link <?php echo ($modulo=="voletas"||$modulo=="")?"active":" ";?>"  style="cursor: pointer;">
                 <i class="far  nav-icon">
                   <svg width="16" height="16" fill="currentColor" class="bi bi-card-checklist" viewBox="0 0 16 16">
                     <path d="M14.5 3a.5.5 0 0 1 .5.5v9a.5.5 0 0 1-.5.5h-13a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5zm-13-1A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h13a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2z"/>
@@ -172,7 +172,7 @@
                 </a>
               </li>
               <li class="nav-item">
-                <a href="inicio.php?modulo=reportes" class="nav-link <?php echo ($modulo=="reportes")?"active":" ";?>">
+                <a href="inicio.php?modulo=reportes"  class="nav-link <?php echo ($modulo=="reportes")?"active":" ";?>">
                   <i class="far fa-chart-bar nav-icon"></i>
                   <p>REPORTES</p>
                 </a>
@@ -183,10 +183,8 @@
                   <p>ADMIN</p>
                 </a>
               </li>
-              
             </ul>
           </li>
-          
         </ul>
       </nav>
       <!-- /.sidebar-menu -->
@@ -205,7 +203,7 @@
   }elseif($modulo=='reportes'){
     include_once "reportes.php";
   }elseif($modulo=='clinicas'){
-    include_once "clinicas.php";
+    include_once "admin.php";
   }elseif($modulo=='crear'){
     include_once "crear_voleta.php";
   }elseif($modulo=='detalles_boleta'){

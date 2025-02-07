@@ -142,35 +142,52 @@ function CrearElements($canti){
         ($cont++);
     }
 
+    $con =mysqli_connect($host,$user_db,$contra_db,$db);
+    $querycolor = "SELECT idtono_color,ctono from tono_color where vigente =1";
+    $respuestacolor = mysqli_query($con,$querycolor);
+    $colores ='';
+    while ($row = mysqli_fetch_assoc($respuestacolor)) {
+        $colores.='<option value="'.$row["idtono_color"].'">'.$row["ctono"].'</option>';
+    }
+
+
     for ($i=1; $i <=$canti ; $i++) { 
         
         echo'
-        <div class="row p-3" style="color:#28a745">
-        <p>'.($i).'.-</p> 
-        <div class="form-group col-3">                                       
-            <label>PRODUCTO</label>
-            <select id="producto'.($i).'" name="producto'.($i).'" onchange="clik_producto($(`#producto'.($i).'`).val(),'.($i).')" class="form-control select2 select2-success" required style="width: 100%;">
-                <option value="" disabled selected>Elige un producto</option>
-                '.$productos.'                     
-            </select>
-        </div>
-        <div class="form-group col-1">
-            <label for="exampleInputEmail1">CANTIDAD</label>
-            <input id="cantidad'.($i).'" name="cantidad'.($i).'" onchange="cambio_cant_precio('.($i).')" value="1" required type="number"  min="1" max="60000" class="form-control">
-        </div>                     
-        <div class="form-group col-2">
-            <label for="exampleInputEmail1">PRECIO UNIDAD</label>
-            <input id="precioU'.($i).'" name="precioU'.($i).'"  onchange="cambio_cant_precio('.($i).')" required type="number"  min="1" class="form-control" >
-        </div>
-        <div class="form-group col-3">
-            <label for="exampleInputEmail1">ESPECIFICACIONES</label>
-            <textarea id="descripcion'.($i).'" name="descripcion'.($i).'" maxlength="200" rows="1" cols="" class="form-control"></textarea>
-        </div>
-        <div class="form-group col-2">
-            <label for="exampleInputEmail1">SUB TOTAL</label>
-            <input id="subtotal'.($i).'" name="subtotal'.($i).'" value="0" required type="number" class="form-control" style="color:salmon; font-weight: bold;font-size: 20px;" readonly>
-        </div>  
-    </div>                 ';
+        <div class="row gx-3 gy-3 p-3" style="color:#28a745">
+    <p>'.($i).'.-</p> 
+    <div class="form-group col-12 col-sm-6 col-md-3">
+        <label>Producto</label>
+        <select id="producto'.($i).'" name="producto'.($i).'" onchange="clik_producto($(`#producto'.($i).'`).val(),'.($i).')" class="form-control select2 select2-success" required style="width: 100%;">
+            <option value="" disabled selected>Elige un producto</option>
+            '.$productos.'                     
+        </select>
+    </div>
+    <div class="form-group col-6 col-sm-4 col-md-1">
+        <label for="cantidad'.($i).'">Cantidad</label>
+        <input id="cantidad'.($i).'" name="cantidad'.($i).'" onchange="cambio_cant_precio('.($i).')" value="1" required type="number" min="1" max="60000" class="form-control">
+    </div>
+    <div class="form-group col-6 col-sm-4 col-md-2">
+        <label>Color</label>
+        <select id="color'.($i).'" name="color'.($i).'" class="form-control select2 select2-success" required style="width: 100%;">
+            <option value="" disabled selected>Color</option>
+            '.$colores.'                     
+        </select>
+    </div>                      
+    <div class="form-group col-6 col-sm-6 col-md-1">
+        <label for="precioU'.($i).'">$</label>
+        <input id="precioU'.($i).'" name="precioU'.($i).'" onchange="cambio_cant_precio('.($i).')" required type="number" min="1" class="form-control">
+    </div>
+    <div class="form-group col-12 col-sm-6 col-md-2">
+        <label for="descripcion'.($i).'">Especificaciones</label>
+        <textarea id="descripcion'.($i).'" name="descripcion'.($i).'" maxlength="200" rows="1" class="form-control"></textarea>
+    </div>
+    <div class="form-group col-12 col-sm-6 col-md-2">
+        <label for="subtotal'.($i).'">Sub total</label>
+        <input id="subtotal'.($i).'" name="subtotal'.($i).'" value="0" required type="number" class="form-control" style="color:salmon; font-weight: bold;font-size: 20px;" readonly>
+    </div>  
+</div>
+                ';
 
     }
     mysqli_close($con);

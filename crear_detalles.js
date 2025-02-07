@@ -262,8 +262,8 @@ async function confirmar_pago(idb,iduser){
     html: `
     <form>
         <div class="form-group">
-          <input placeholder="Ingresar monto" min="0" id="cantidad" class="swal2-input" type="number" required>
-          <select id="med" class="swal2-input"> 
+          <input placeholder="Ingresar monto" min="0" id="cantidad" class="swal2-input" type="number">
+          <select id="med" class="swal2-input" required> 
           ${op}
           </select>  
       </div>
@@ -391,14 +391,17 @@ function campana(qry){
     case 'pasado':
       fechaActual.setDate(fechaActual.getDate() + 2);
       break; 
-
-  }    
-      var fechaFormateada = 'E-'+
-      ('0' + fechaActual.getDate()).slice(-2) + '-' +
-      ('0' + (fechaActual.getMonth() + 1)).slice(-2) + '-' +
-      fechaActual.getFullYear();
-
-  sessionStorage.setItem('busquedaDataTable', fechaFormateada);
+  }
+  if (qry =='aa'){
+    var data = ''
+    sessionStorage.setItem('busquedaDataTable', data);
+  }else{var fechaFormateada = 'E-'+
+    ('0' + fechaActual.getDate()).slice(-2) + '-' +
+    ('0' + (fechaActual.getMonth() + 1)).slice(-2) + '-' +
+    fechaActual.getFullYear();
+sessionStorage.setItem('busquedaDataTable', fechaFormateada);
+}    
+      
   window.location.href = "inicio.php?modulo=voletas";
 }
 
@@ -491,11 +494,282 @@ function dtable_cargar_seach(s){
     //table.draw(true);
 });
 
+////*****   MODULO   ADMINNISTRADOR
+function editarProducto(idProducto, nombre, precio, material, estado) {
+  Swal.fire({
+      title: 'Editar Producto',
+      width: '800px',
+      html: `
+        <div style="display: grid; grid-template-columns: auto 1fr; gap: 8px; align-items: center; text-align: left;">
+            <label for="nombreProducto">Nombre:</label>
+            <input type="text" id="nombreProducto" class="swal2-input" value="${nombre}" style="width: 100%; max-width: 90%;">
+
+            <label for="precioProducto">Precio:</label>
+            <input type="number" id="precioProducto" class="swal2-input" value="${precio}" style="width: 100%; max-width: 90%;">
+
+            <label for="materialProducto">Material:</label>
+            <input type="number" id="materialProducto" class="swal2-input" value="${material}" step="0.01" style="width: 100%; max-width: 90%;">
+
+            <label>Estado:</label>
+            <div style="display: flex; gap: 10px;">
+                <label><input type="radio" name="estadoProducto" value="1" ${estado == 1 ? 'checked' : ''}> Activo</label>
+                <label><input type="radio" name="estadoProducto" value="0" ${estado == 0 ? 'checked' : ''}> Bloqueado</label>
+            </div>
+        </div>
+    `,
+      showCancelButton: true,
+      confirmButtonText: 'Guardar',
+      cancelButtonText: 'Cancelar',
+      preConfirm: () => {
+          // Obtiene los valores de los campos del modal
+          const nombreProducto = document.getElementById('nombreProducto').value;
+          const precioProducto = document.getElementById('precioProducto').value;
+          const materialProducto = document.getElementById('materialProducto').value;
+          const estadoProducto = document.querySelector('input[name="estadoProducto"]:checked').value;
+
+          if (!nombreProducto || !precioProducto || !materialProducto) {
+              Swal.showValidationMessage('Todos los campos son obligatorios');
+              return false;
+          }
+
+          return {
+              nombre: nombreProducto,
+              precio: precioProducto,
+              material: materialProducto,
+              estado: parseInt(estadoProducto),
+          };
+      }
+  }).then((result) => {
+      if (result.isConfirmed) {
+          // Envía los datos al backend para actualizar el producto
+          const data = result.value;
+
+          fetch('editar_elemento.php', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                  id: idProducto,
+                  ...data,
+                  accion: 'editar',  // Acción que se ejecuta
+                  tipo: 'producto'   // Tipo de entidad que se está editando
+              })
+          })
+          .then(response => response.json())
+          .then(response => {
+              if (response.success) {
+                  Swal.fire('¡Actualizado!', 'El producto ha sido actualizado.', 'success').then(() => {
+                      // Refresca la página o la tabla
+                      location.reload();
+                  });
+              } else {
+                  Swal.fire('Error', 'No se pudo actualizar el producto.', 'error');
+              }
+          })
+          .catch(() => {
+              Swal.fire('Error', 'Ocurrió un error inesperado.', 'error');
+          });
+      }
+  });
+}
 
 
+function agregarProducto() {
+  Swal.fire({
+      title: 'Agregar Producto',
+      html: `
+          <div style="text-align: left;">
+              <label for="nombreProducto">Nombre:</label>
+              <input type="text" id="nombreProducto" class="swal2-input" placeholder="Nombre del producto">
+              
+              <label for="precioProducto">Precio:</label>
+              <input type="number" id="precioProducto" class="swal2-input" placeholder="Precio del producto">
+              
+              <label for="materialProducto">Material:</label>
+              <input type="text" id="materialProducto" class="swal2-input" placeholder="Material del producto">
+              
+              <label for="estadoProducto">Estado:</label>
+              <div style="margin-top: 10px;">
+                  <label style="margin-right: 10px;">
+                      <input type="radio" name="estadoProducto" value="1" checked> Activo
+                  </label>
+                  <label>
+                      <input type="radio" name="estadoProducto" value="0"> Bloqueado
+                  </label>
+              </div>
+          </div>
+      `,
+      showCancelButton: true,
+      confirmButtonText: 'Guardar',
+      cancelButtonText: 'Cancelar',
+      preConfirm: () => {
+          const nombreProducto = document.getElementById('nombreProducto').value;
+          const precioProducto = document.getElementById('precioProducto').value;
+          const materialProducto = document.getElementById('materialProducto').value;
+          const estadoProducto = document.querySelector('input[name="estadoProducto"]:checked').value;
 
- //////////////////////////////////////////////////////////////7//////REPORTES//////////////////////////////////
+          if (!nombreProducto || !precioProducto || !materialProducto) {
+              Swal.showValidationMessage('Todos los campos son obligatorios');
+              return false;
+          }
 
- ///AJAX DATOS BAR CHART
+          return {
+              nombre: nombreProducto,
+              precio: precioProducto,
+              material: materialProducto,
+              estado: parseInt(estadoProducto),
+              accion: 'agregar',  // Acción que se va a realizar (agregar)
+              tipo: 'producto'   // Tipo de entidad (producto)
+          };
+      }
+  }).then((result) => {
+      if (result.isConfirmed) {
+          const data = result.value;
+
+          // Enviar datos al backend
+          fetch('editar_elemento.php', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(data)  // Envía los datos tal cual se recibieron
+          })
+          .then(response => response.json())
+          .then(response => {
+              if (response.success) {
+                  Swal.fire('¡Producto agregado!', 'El producto ha sido agregado exitosamente.', 'success').then(() => {
+                      // Refresca la página o la tabla
+                      location.reload();
+                  });
+              } else {
+                  Swal.fire('Error', response.error || 'No se pudo agregar el producto.', 'error');
+              }
+          })
+          .catch(() => {
+              Swal.fire('Error', 'Ocurrió un error inesperado.', 'error');
+          });
+      }
+  });
+}
+
+function eliminarProducto(idProducto) {
+  Swal.fire({
+      title: '¿Estás seguro?',
+      text: "¡No podrás revertir esto!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Sí, eliminar',
+      cancelButtonText: 'Cancelar',
+      reverseButtons: true
+  }).then((result) => {
+      if (result.isConfirmed) {
+          // Enviar solicitud para eliminar el producto
+          fetch('editar_elemento.php', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                  id: idProducto,
+                  accion: 'eliminar',
+                  tipo: 'producto'
+              })
+          })
+          .then(response => response.json())
+          .then(response => {
+              if (response.success) {
+                  Swal.fire('¡Eliminado!', 'El producto ha sido eliminado.', 'success').then(() => {
+                      // Refresca la página o la tabla
+                      location.reload();
+                  });
+              } else {
+                  Swal.fire('Error', response.error || 'No se pudo eliminar el producto.', 'error');
+              }
+          })
+          .catch(() => {
+              Swal.fire('Error', 'Ocurrió un error inesperado.', 'error');
+          });
+      }
+  });
+}
+
+
+function editarClinicas(idCli, nombre, telefono, direccion,referen,ruc, estado) {
+  Swal.fire({
+      title: 'Editar Producto',
+      width: '800px',
+      html: `
+        <div style="display: grid; grid-template-columns: auto 1fr; gap: 4px; align-items: center; text-align: left;">
+            <label for="nombreProducto">Nombre:</label>
+            <input type="text" id="nombreProducto" class="swal2-input" value="${nombre}" style="width: 100%; max-width: 90%;">
+
+            <label for="precioProducto">Teléfono:</label>
+            <input type="text" id="precioProducto" class="swal2-input" value="${telefono}" style="width: 100%; max-width: 90%;">
+
+            <label for="direccionProducto">Dirección:</label>
+            <input type="text" id="direccionProducto" class="swal2-input" value="${direccion}" style="width: 100%; max-width: 90%;">
+
+            <label for="referenciaProducto">Referencia:</label>
+            <input type="text" id="referenciaProducto" class="swal2-input" value="${referen}" style="width: 100%; max-width: 90%;">
+
+            <label for="rucProducto">RUC:</label>
+            <input type="text" id="rucProducto" class="swal2-input" value="${ruc}" style="width: 100%; max-width: 90%;">
+
+            <label>Estado:</label>
+            <div style="display: flex; gap: 10px;">
+                <label><input type="radio" name="estadoProducto" value="1" ${estado == 1 ? 'checked' : ''}> Activo</label>
+                <label><input type="radio" name="estadoProducto" value="0" ${estado == 0 ? 'checked' : ''}> Bloqueado</label>
+            </div>
+        </div>
+    `,
+      showCancelButton: true,
+      confirmButtonText: 'Guardar',
+      cancelButtonText: 'Cancelar',
+      preConfirm: () => {
+          // Obtiene los valores de los campos del modal
+          const nombreProducto = document.getElementById('nombreProducto').value;
+          const precioProducto = document.getElementById('precioProducto').value;
+          const materialProducto = document.getElementById('materialProducto').value;
+          const estadoProducto = document.querySelector('input[name="estadoProducto"]:checked').value;
+
+          if (!nombreProducto || !precioProducto || !materialProducto) {
+              Swal.showValidationMessage('Todos los campos son obligatorios');
+              return false;
+          }
+
+          return {
+              nombre: nombreProducto,
+              precio: precioProducto,
+              material: materialProducto,
+              estado: parseInt(estadoProducto),
+          };
+      }
+  }).then((result) => {
+      if (result.isConfirmed) {
+          // Envía los datos al backend para actualizar el producto
+          const data = result.value;
+
+          fetch('editar_elemento.php', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                  id: idProducto,
+                  ...data,
+                  accion: 'editar',  // Acción que se ejecuta
+                  tipo: 'producto'   // Tipo de entidad que se está editando
+              })
+          })
+          .then(response => response.json())
+          .then(response => {
+              if (response.success) {
+                  Swal.fire('¡Actualizado!', 'El producto ha sido actualizado.', 'success').then(() => {
+                      // Refresca la página o la tabla
+                      location.reload();
+                  });
+              } else {
+                  Swal.fire('Error', 'No se pudo actualizar el producto.', 'error');
+              }
+          })
+          .catch(() => {
+              Swal.fire('Error', 'Ocurrió un error inesperado.', 'error');
+          });
+      }
+  });
+}
 
 

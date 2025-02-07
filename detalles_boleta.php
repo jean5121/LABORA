@@ -25,15 +25,16 @@ if(isset($_REQUEST['contenedor_clinicas'])){
     
 
     /////INSERTAR LOS DETALLES
-    $queryInsert = 'INSERT INTO detalle_boleta(cantidad,sub_total,descripcion,idproducto,precio_unidad,idvoleta) VALUES';
+    $queryInsert = 'INSERT INTO detalle_boleta(cantidad,sub_total,descripcion,idproducto,precio_unidad,idvoleta,tono_color) VALUES';
     for ($i=1; $i <=$NUM_ELEMENT ; $i++) {
         $temp_canti =  $_POST['cantidad'.$i];
         $temp_subtotal =  $_POST['subtotal'.$i];
+        $temp_color =  $_POST['color'.$i];
         $temp_decrip=  $_POST['descripcion'.$i];
         $temp_idpro=  $_POST['producto'.$i];
         $temp_precioU=  $_POST['precioU'.$i];
 
-        $query_elemntos = "(".$temp_canti.",".$temp_subtotal.",'".$temp_decrip."',".$temp_idpro.",".$temp_precioU.",".$row2['IDMAX']."),";
+        $query_elemntos = "(".$temp_canti.",".$temp_subtotal.",'".$temp_decrip."',".$temp_idpro.",".$temp_precioU.",".$row2['IDMAX'].",".$temp_color."),";
         $queryInsert = $queryInsert.$query_elemntos;
     }
     $queryInsert=substr($queryInsert, 0, -1);
@@ -180,9 +181,6 @@ if (isset($_REQUEST['idBole'])) {
                 </div>
                 <div class="row">
                     <div class="col-12">
-
-                    
-
                     <div class="card">
                 <div class="card-header">
                 <h3 class="card-title">DETALLES</h3>
@@ -207,9 +205,10 @@ if (isset($_REQUEST['idBole'])) {
             <?php  
                 include_once 'conect.php';
                 $con =mysqli_connect($host,$user_db,$contra_db,$db);
-                $queryDETA = "SELECT cantidad, descripcion, sub_total, pro.nombre_pro,precio_unidad
+                $queryDETA = "SELECT cantidad, descripcion, sub_total, pro.nombre_pro,precio_unidad,ton.ctono
                 FROM detalle_boleta deta
-                INNER JOIN producto pro 	ON deta.idproducto = pro.idproducto                
+                INNER JOIN producto pro 	ON deta.idproducto = pro.idproducto
+                INNER JOIN tono_color ton   on deta.tono_color = ton.idtono_color  
                 where deta.idvoleta = $IDBOLE;  ";   
                 $respuestaDETA = mysqli_query($con,$queryDETA);  
                 $tot = 0;
@@ -219,36 +218,45 @@ if (isset($_REQUEST['idBole'])) {
             </div>
             <!-- /.card-header -->
             <div class="card-body p-0">
-                <table class="table table-sm">
-                <thead>
-                    <tr>
-                    <th style="width: 10px">#</th>
-                    <th>Nombre</th>
-                    <th>Detalle</th>
-                    <th>Precio</th>
-                    <th style="width: 10px">Sub total</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php    
-                    while ($rowDETA=mysqli_fetch_assoc($respuestaDETA)) {           
-                    ?>
-                    <tr>
-                    <td><?php echo $rowDETA['cantidad'] ?></td>
-                    <td><?php  echo $rowDETA['nombre_pro']  ?></td>
-                    <td><?php echo $rowDETA['descripcion'] ?></td>
-                    <td><?php echo $rowDETA['precio_unidad'] ?></td>
-                    <td><?php echo $rowDETA['sub_total'] ?></td>
-                    </tr>
-                    <?php $tot += $rowDETA['sub_total'];   }  ?>
-                    <td></td>
-                    <td>TOTAL</td>
-                    <td></td>
-                    <td></td>
-                    <td><?php echo $tot  ?></td>
-                </tbody>
-                <?php  mysqli_close($con);   ?>
-                </table>
+            <div class="table-responsive">
+    <table class="table table-sm table-bordered">
+        <thead>
+            <tr>
+                <th style="width: 10%;">#</th>
+                <th>Nombre</th>
+                <th>Tono</th>
+                <th>Detalle</th>
+                <th>Precio</th>
+                <th style="width: 15%;">Sub total</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php    
+            $tot = 0; // Inicializa la variable total
+            while ($rowDETA = mysqli_fetch_assoc($respuestaDETA)) {           
+            ?>
+            <tr>
+                <td><?php echo $rowDETA['cantidad'] ?></td>
+                <td style="word-wrap: break-word; word-break: break-word;"><?php echo $rowDETA['nombre_pro'] ?></td>
+                <td style="word-wrap: break-word; word-break: break-word;"><?php echo $rowDETA['ctono'] ?></td>
+                <td style="word-wrap: break-word; word-break: break-word;"><?php echo $rowDETA['descripcion'] ?></td>
+                <td><?php echo $rowDETA['precio_unidad'] ?></td>
+                <td><?php echo $rowDETA['sub_total'] ?></td>
+            </tr>
+            <?php $tot += $rowDETA['sub_total']; } ?>
+            <tr>
+                <td></td>
+                <td><strong>TOTAL</strong></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td><strong><?php echo $tot ?></strong></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<?php mysqli_close($con); ?>
+
             </div>
             <!-- /.card-body -->
             </div>

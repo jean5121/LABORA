@@ -63,8 +63,56 @@ INSERT INTO `usuario` (`idusuario`, `nombre_usuario`, `usuario`, `contrasena`, `
 (2, 'juana magdalena', 'juan', '12345', 1, 2);
 
 --
--- Índices para tablas volcadas
+
 --
+INSERT into tono_color (ctono) VALUES 
+('BL1'),
+('BL2'),
+('BL3'),
+('BL4'),
+
+('A1'),
+('A2'),
+('A3'),
+('A3.5'),
+('A4'),
+
+('B1'),
+('B2'),
+('B3'),
+('B4'),
+
+('C1'),
+('C2'),
+('C3'),
+('C4'),
+
+('D2'),
+('D3'),
+('D4'),
+
+('01-110'),
+('1A-120'),
+('1B-130'),
+('1C-140'),
+
+('2B-210'),
+('1D-220'),
+('2C-240'),
+
+('3A-310'),
+('5B-320'),
+('2E-330'),
+
+('4A-410'),
+('6B-420'),
+('4B-430'),
+('3E-340'),
+
+('6D-510'),
+('4C-520'),
+('3C-530'),
+('4D-540')
 
 --
 -- Indices de la tabla `tipo_usuario`

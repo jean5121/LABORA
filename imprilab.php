@@ -26,6 +26,7 @@
     inner JOIN usuario u 	ON u.idusuario 		= b.idusuario_creador
     inner JOIN tipo_usuario tu ON tu.idtipo_usuario = u.tipo_usuario
     inner JOIN detalle_boleta de    on b.idboleta = de.idvoleta
+    
     where idboleta = $bol";
     $respuesta = mysqli_query($con,$queryBOLE);
     $row = mysqli_fetch_assoc($respuesta);
@@ -34,7 +35,8 @@
     ?>
     <div class="ticket">
         <pre>
-<?php echo "\x1B\X21\X10"; ?>BOLETA C-<?php echo $bol;?> <?php echo "\x1B\X21\X10"; ?><?php echo PHP_EOL; ?>
+
+BOLETA C-<?php echo $bol;?> <?php echo PHP_EOL; ?>
 FECHA ENTREGA:<?php echo $row['fentrega'];?> <?php echo PHP_EOL; ?>
 Clinic:<?php echo $row['nombre_cli']."(".$row['telefono_cli'].")";?>
 <?php echo PHP_EOL; ?>
@@ -42,22 +44,23 @@ Client:<?php echo $row['nombre_odo']."(".$row['telefono'].")";;?> <?php echo PHP
 <?php echo PHP_EOL; ?>
 --------------------
 <?php    
-
 include_once 'conect.php';
 $con =mysqli_connect($host,$user_db,$contra_db,$db);
-$queryDETA = "SELECT cantidad, descripcion, sub_total, pro.nombre_pro,precio_unidad
+$queryDETA = "SELECT cantidad, descripcion, sub_total, pro.nombre_pro,precio_unidad,tono.ctono
 FROM detalle_boleta deta
-INNER JOIN producto pro 	ON deta.idproducto = pro.idproducto                
+INNER JOIN producto pro 	ON deta.idproducto = pro.idproducto
+inner join tono_color tono        on deta.tono_color = tono.idtono_color                
 where deta.idvoleta = $bol;  ";   
 $respuestaDETA = mysqli_query($con,$queryDETA);
-
 ?>
+
 <?php while ($rowDETA=mysqli_fetch_assoc($respuestaDETA)) {?>
-<?php echo $rowDETA['cantidad']. "-" . $rowDETA['nombre_pro']."-" .$rowDETA['descripcion']  ?> 
+<?php echo $rowDETA['cantidad']. "-" . $rowDETA['nombre_pro']." (".$rowDETA['ctono'].") " .$rowDETA['descripcion']  ?> 
 --------------------
 <?php  }   mysqli_close($con);   ?>
 --------------------
 --------------------
+
         </pre>
     </div>
     <button class="no-print" id="btnPrint">Imprimir</button>

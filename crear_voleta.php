@@ -46,43 +46,45 @@ S
               <!-- /.card-header -->
               <!-- form start -->
               <form action="inicio.php?modulo=detalles_boleta" method="POST" id="formulario">
-                <div class="card-body" >
-                  <div class="row">
-                      <div class="form-group col-3">
-                        <label>CLINICA :</label>
-                        <select id="contenedor_clinicas"  name="contenedor_clinicas" required class="form-control select2 select2-success" style="width: 100%;">                         
-                        </select>
+              <div class="card-body">
+                  <div class="row gx-3 gy-3">
+                      <!-- Clínica -->
+                      <div class="form-group col-12 col-sm-6 col-md-4">
+                          <label>CLINICA :</label>
+                          <select id="contenedor_clinicas" name="contenedor_clinicas" required class="form-control select2 select2-success" style="width: 100%;">
+                          </select>
                       </div>
-                      <div class="form-group col-3 ">
-                      <label>FECHA ENTREGA :</label>
-                        <div class="input-group date" id="reservationdate" data-target-input="nearest">                       
-                            <input type="date" id="f_entrega"  name="f_entrega"  class="form-control">                        
-                        </div>
+                      <!-- Fecha de entrega -->
+                      <div class="form-group col-12 col-sm-6 col-md-4">
+                          <label>FECHA ENTREGA :</label>
+                          <div class="input-group date" id="reservationdate" data-target-input="nearest">
+                              <input type="date" id="f_entrega" name="f_entrega" class="form-control">
+                          </div>
                       </div>
-                      <div class="col-2"></div>
-                      <div class="col-3">
-                            <div id="canti" class="info-box">
+                      <!-- Número de elementos -->
+                      <div class="form-group col-12 col-sm-6 col-md-4">
+                          <div id="canti" class="info-box">
                               <span class="info-box-icon bg-warning elevation-1"><i class="fas fa-file"></i></span>
-                              <div  class="info-box-content">               
-                                <span class="info-box-number">
-                                  <input name="num_elemetos" type="number"  required onchange="llenarElementosPHP($('#num_elemetos').val())" requ placeholder="Elementos" min="1" max="1000" id="num_elemetos" class="form-control">                             
-                                </span>
-                              </div>            
-                            </div>
+                              <div class="info-box-content">
+                                  
+                                  <span class="info-box-number">
+                                      <input name="num_elemetos" type="number" required onchange="llenarElementosPHP($('#num_elemetos').val())" placeholder="Elementos" min="1" max="1000" id="num_elemetos" class="form-control">
+                                  </span>
+                              </div>
+                          </div>
                       </div>
                   </div>
-                  <div class="row">
-                      <div class="form-group col-3">
-                        <label>ODONTOLOGO :</label>
-                        <select id="contenedor_odontologo"  name="contenedor_odontologo" required class="form-control select2 select2-success" style="width: 100%;">                         
-                        </select>
+                  <div class="row gx-3 gy-3">
+                      <!-- Odontólogo -->
+                      <div class="form-group col-12 col-sm-6 col-md-4">
+                          <label>ODONTOLOGO :</label>
+                          <select id="contenedor_odontologo" name="contenedor_odontologo" required class="form-control select2 select2-success" style="width: 100%;">
+                          </select>
                       </div>
                   </div>
-                  <div>
-                                
-                      </div>
-                    <div class="divider py-1 card card-info" ></div>
-                  </div>
+                  <div class="divider py-1 card card-info"></div>
+              </div>
+
                 <div id="contenedor">     
                       
                 </div>
