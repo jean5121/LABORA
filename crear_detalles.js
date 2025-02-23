@@ -583,10 +583,9 @@ function agregarProducto() {
               
               <label for="precioProducto">Precio:</label>
               <input type="number" id="precioProducto" class="swal2-input" placeholder="Precio del producto">
-              
+
               <label for="materialProducto">Material:</label>
               <input type="text" id="materialProducto" class="swal2-input" placeholder="Material del producto">
-              
               <label for="estadoProducto">Estado:</label>
               <div style="margin-top: 10px;">
                   <label style="margin-right: 10px;">
@@ -608,7 +607,7 @@ function agregarProducto() {
           const estadoProducto = document.querySelector('input[name="estadoProducto"]:checked').value;
 
           if (!nombreProducto || !precioProducto || !materialProducto) {
-              Swal.showValidationMessage('Todos los campos son obligatorios');
+              Swal.showValidationMessage('Campos requeridos:<br> Nombre, Precio, Ctd Material');
               return false;
           }
 
@@ -691,29 +690,24 @@ function eliminarProducto(idProducto) {
 
 function editarClinicas(idCli, nombre, telefono, direccion,referen,ruc, estado) {
   Swal.fire({
-      title: 'Editar Producto',
+      title: 'Editar Clinica',
       width: '800px',
       html: `
         <div style="display: grid; grid-template-columns: auto 1fr; gap: 4px; align-items: center; text-align: left;">
-            <label for="nombreProducto">Nombre:</label>
-            <input type="text" id="nombreProducto" class="swal2-input" value="${nombre}" style="width: 100%; max-width: 90%;">
-
-            <label for="precioProducto">Teléfono:</label>
-            <input type="text" id="precioProducto" class="swal2-input" value="${telefono}" style="width: 100%; max-width: 90%;">
-
-            <label for="direccionProducto">Dirección:</label>
-            <input type="text" id="direccionProducto" class="swal2-input" value="${direccion}" style="width: 100%; max-width: 90%;">
-
-            <label for="referenciaProducto">Referencia:</label>
-            <input type="text" id="referenciaProducto" class="swal2-input" value="${referen}" style="width: 100%; max-width: 90%;">
-
-            <label for="rucProducto">RUC:</label>
-            <input type="text" id="rucProducto" class="swal2-input" value="${ruc}" style="width: 100%; max-width: 90%;">
-
+            <label for="nombreClinica">Nombre:</label>
+            <input type="text" id="nombreClinica" class="swal2-input" value="${nombre}" style="width: 100%; max-width: 90%;">
+            <label for="telefClini">Teléfono:</label>
+            <input type="text" id="telefClini" class="swal2-input" value="${telefono}" style="width: 100%; max-width: 90%;">
+            <label for="direccionClinica">Dirección:</label>
+            <input type="text" id="direccionClinica" class="swal2-input" value="${direccion}" style="width: 100%; max-width: 90%;">
+            <label for="referenciaClinica">Referencia:</label>
+            <input type="text" id="referenciaClinica" class="swal2-input" value="${referen}" style="width: 100%; max-width: 90%;">
+            <label for="rucClinica">RUC:</label>
+            <input type="text" id="rucClinica" maxlength="11" class="swal2-input" value="${ruc}" style="width: 100%; max-width: 90%;">
             <label>Estado:</label>
             <div style="display: flex; gap: 10px;">
-                <label><input type="radio" name="estadoProducto" value="1" ${estado == 1 ? 'checked' : ''}> Activo</label>
-                <label><input type="radio" name="estadoProducto" value="0" ${estado == 0 ? 'checked' : ''}> Bloqueado</label>
+                <label><input type="radio" name="estadoClinica" value="1" ${estado == 1 ? 'checked' : ''}> Activo</label>
+                <label><input type="radio" name="estadoClinica" value="0" ${estado == 0 ? 'checked' : ''}> Bloqueado</label>
             </div>
         </div>
     `,
@@ -722,21 +716,24 @@ function editarClinicas(idCli, nombre, telefono, direccion,referen,ruc, estado) 
       cancelButtonText: 'Cancelar',
       preConfirm: () => {
           // Obtiene los valores de los campos del modal
-          const nombreProducto = document.getElementById('nombreProducto').value;
-          const precioProducto = document.getElementById('precioProducto').value;
-          const materialProducto = document.getElementById('materialProducto').value;
-          const estadoProducto = document.querySelector('input[name="estadoProducto"]:checked').value;
+          const nombreClinica = document.getElementById('nombreClinica').value;
+          const telefClini = document.getElementById('telefClini').value;
+          const direccionClinica = document.getElementById('direccionClinica').value;
+          const referenciaClinica = document.getElementById('referenciaClinica').value;
+          const rucClinica = document.getElementById('rucClinica').value;
+          const estadoClinic = document.querySelector('input[name="estadoClinica"]:checked').value;
 
-          if (!nombreProducto || !precioProducto || !materialProducto) {
+          if (!nombreClinica || !telefClini || !direccionClinica) {
               Swal.showValidationMessage('Todos los campos son obligatorios');
               return false;
           }
-
           return {
-              nombre: nombreProducto,
-              precio: precioProducto,
-              material: materialProducto,
-              estado: parseInt(estadoProducto),
+              nombre: nombreClinica,
+              telef: telefClini,
+              direc: direccionClinica,
+              refe: referenciaClinica,
+              ruc: rucClinica,
+              estado: parseInt(estadoClinic),
           };
       }
   }).then((result) => {
@@ -748,21 +745,26 @@ function editarClinicas(idCli, nombre, telefono, direccion,referen,ruc, estado) 
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({
-                  id: idProducto,
+                  id: idCli,
                   ...data,
                   accion: 'editar',  // Acción que se ejecuta
-                  tipo: 'producto'   // Tipo de entidad que se está editando
+                  tipo: 'clinica'   // Tipo de entidad que se está editando
               })
           })
           .then(response => response.json())
           .then(response => {
               if (response.success) {
-                  Swal.fire('¡Actualizado!', 'El producto ha sido actualizado.', 'success').then(() => {
+                  Swal.fire({
+                    title: '¡Actualizado!',
+                    text: 'La clínica ha sido actualizada.',
+                    icon: 'success',
+                    timer: 2000
+                  }).then(() => {
                       // Refresca la página o la tabla
                       location.reload();
                   });
               } else {
-                  Swal.fire('Error', 'No se pudo actualizar el producto.', 'error');
+                  Swal.fire('Error', 'No se pudo actualizar La clinica.', 'error');
               }
           })
           .catch(() => {
@@ -773,3 +775,81 @@ function editarClinicas(idCli, nombre, telefono, direccion,referen,ruc, estado) 
 }
 
 
+function agregarClinica() {
+  Swal.fire({
+      title: 'Agregar Producto',
+      width: '800px',
+      html: `
+        <div style="display: grid; grid-template-columns: auto 1fr; gap: 4px; align-items: center; text-align: left;">
+            <label for="nombreClinica">Nombre:</label>
+            <input type="text" id="nombreClinica" class="swal2-input"  style="width: 100%; max-width: 90%;">
+            <label for="telefClini">Teléfono:</label>
+            <input type="text" id="telefClini" class="swal2-input"  style="width: 100%; max-width: 90%;">
+            <label for="direccionClinica">Dirección:</label>
+            <input type="text" id="direccionClinica" class="swal2-input" style="width: 100%; max-width: 90%;">
+            <label for="referenciaClinica">Referencia:</label>
+            <input type="text" id="referenciaClinica" class="swal2-input"  style="width: 100%; max-width: 90%;">
+            <label for="rucClinica">RUC:</label>
+            <input type="text" id="rucClinica" maxlength="11" class="swal2-input"  style="width: 100%; max-width: 90%;">
+            <label>Estado:</label>
+            <div style="display: flex; gap: 10px;">
+                <label><input type="radio" name="estadoClinica" value="1" checked> Activo</label>
+                <label><input type="radio" name="estadoClinica" value="0" > Bloqueado</label>
+            </div>
+        </div>
+      `,
+      showCancelButton: true,
+      confirmButtonText: 'Guardar',
+      cancelButtonText: 'Cancelar',
+      preConfirm: () => {
+          // Obtiene los valores de los campos del modal
+          const nombreClinica = document.getElementById('nombreClinica').value;
+          const telefClini = document.getElementById('telefClini').value;
+          const direccionClinica = document.getElementById('direccionClinica').value;
+          const referenciaClinica = document.getElementById('referenciaClinica').value;
+          const rucClinica = document.getElementById('rucClinica').value;
+          const estadoClinic = document.querySelector('input[name="estadoClinica"]:checked').value;
+
+          if (!nombreClinica) {
+              Swal.showValidationMessage('Campos requeridos:<br> Nombre');
+              return false;
+          }
+
+          return {
+            nombre: nombreClinica,
+            telef: telefClini,
+            direc: direccionClinica,
+            refe: referenciaClinica,
+            ruc: rucClinica,
+            estado: parseInt(estadoClinic),
+              accion: 'agregar',  // Acción que se va a realizar (agregar)
+              tipo: 'clinica'   // Tipo de entidad (producto)
+          };
+      }
+  }).then((result) => {
+      if (result.isConfirmed) {
+          const data = result.value;
+
+          // Enviar datos al backend
+          fetch('editar_elemento.php', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(data)  // Envía los datos tal cual se recibieron
+          })
+          .then(response => response.json())
+          .then(response => {
+              if (response.success) {
+                  Swal.fire('Clinica agregado!', 'la clinica ha sido agregada exitosamente.', 'success').then(() => {
+                      // Refresca la página o la tabla
+                      location.reload();
+                  });
+              } else {
+                  Swal.fire('Error', response.error || 'No se pudo agregar la clinica.', 'error');
+              }
+          })
+          .catch(() => {
+              Swal.fire('Error', 'Ocurrió un error inesperado.', 'error');
+          });
+      }
+  });
+}

@@ -38,8 +38,17 @@ function agregarProducto($data, $con) {
     $material = floatval($data['material']);
     $estado = intval($data['estado']);
 
+// Verificar si el producto ya existe
+$checkQuery = "SELECT 1 FROM producto WHERE nombre_pro = '$nombre' LIMIT 1";
+$result = mysqli_query($con, $checkQuery);
+
+if (mysqli_num_rows($result) > 0) {
+    // Si el producto ya existe, devuelve un error
+    return ['success' => false, 'error' => 'El producto ya existe en la base de datos.'];
+}
+
     $query = "INSERT INTO producto (nombre_pro, precio_promedio, cantidad_material, estado_pro) 
-            VALUES ('$nombre', $precio, $material, $estado)";
+            SELECT  '$nombre', $precio, $material, $estado";
 
     if (mysqli_query($con, $query)) {
         return ['success' => true, 'message' => 'Producto agregado correctamente'];
@@ -61,12 +70,69 @@ function eliminarProducto($id, $con) {
     }
 }
 
+// Función para editar CLINICA
+function editarClinica($data, $con) {
+    $idProducto = intval($data['id']);
+    $nombre = mysqli_real_escape_string($con, $data['nombre']);
+    $direc = mysqli_real_escape_string($con, $data['direc']);
+    $refe = mysqli_real_escape_string($con, $data['refe']);
+    $ruc = mysqli_real_escape_string($con, $data['ruc']);
+    $telefo = mysqli_real_escape_string($con, $data['telef']);
+    $estado = intval($data['estado']);
+
+    $query = "UPDATE clinica SET 
+                nombre_cli = '$nombre', 
+                telefono_cli = '$telefo', 
+                direccion_cli = '$direc', 
+                referencia_cli = '$refe', 
+                ruc_cli = '$ruc', 
+                estado_cli = $estado 
+            WHERE idclinica  = $idProducto";
+
+    if (mysqli_query($con, $query)) {
+        return ['success' => true, 'message' => 'Clinica actualizada correctamente'];
+    } else {
+        return ['success' => false, 'error' => 'Error al actualizar Clinica'];
+    }
+}
+
+function agregarClinica($data, $con) {
+    $nombre = mysqli_real_escape_string($con, $data['nombre']);
+    $direc = mysqli_real_escape_string($con, $data['direc']);
+    $refe = mysqli_real_escape_string($con, $data['refe']);
+    $ruc = mysqli_real_escape_string($con, $data['ruc']);
+    $telefo = mysqli_real_escape_string($con, $data['telef']);
+    $estado = intval($data['estado']);
+
+// Verificar si el producto ya existe
+$checkQuery = "SELECT 1 FROM clinica WHERE nombre_cli = '$nombre' LIMIT 1";
+$result = mysqli_query($con, $checkQuery);
+
+if (mysqli_num_rows($result) > 0) {
+    // Si el producto ya existe, devuelve un error
+    return ['success' => false, 'error' => 'La clinica ya existe en la base de datos.'];
+}
+
+    $query = "INSERT INTO clinica (nombre_cli, telefono_cli, direccion_cli,referencia_cli,ruc_cli, estado_cli) 
+            SELECT  '$nombre', '$direc', '$refe', '$ruc', '$telefo',$estado";
+
+    if (mysqli_query($con, $query)) {
+        return ['success' => true, 'message' => 'clinica agregada correctamente'];
+    } else {
+        return ['success' => false, 'error' => 'Error al agregar la clinica.'];
+    }
+}
 // Mapa de funciones para cada tipo de entidad
 $acciones = [
     'producto' => [
         'editar' => 'editarProducto',
         'agregar' => 'agregarProducto',
         'eliminar' => 'eliminarProducto'
+    ],
+    'clinica' => [
+        'editar' => 'editarClinica',
+        'agregar' => 'agregarClinica',
+        'eliminar' => 'eliminarClinica'
     ],
     'persona' => [
         'editar' => 'editarPersona',
