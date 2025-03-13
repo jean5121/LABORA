@@ -4,7 +4,7 @@
 <?php 
 if(isset($_REQUEST['contenedor_clinicas'])){
     $IDCLINIC = $_POST['contenedor_clinicas'];
-    $IDODO = $_POST['contenedor_odontologo'];
+    //$IDODO = $_POST['contenedor_odontologo'];
     $FECHA_ENTRE = $_POST['f_entrega'];
     
     $TOTAL = $_POST['total'];
@@ -15,8 +15,8 @@ if(isset($_REQUEST['contenedor_clinicas'])){
 
     ////INGRESAR DATOS A LA TD BOLETA
     $con =mysqli_connect($host,$user_db,$contra_db,$db);
-    $query = "INSERT INTO boleta (fecha_crea,precio_total,deuda,fecha_entrega,idclinica,idusuario_creador,idodontologo) 
-                                VALUES(now(),".$TOTAL.",".$TOTAL.",'".$FECHA_ENTRE."',".$IDCLINIC.",".$iduser.",".$IDODO.")";
+    $query = "INSERT INTO boleta (fecha_crea,precio_total,deuda,fecha_entrega,idcliente,idusuario_creador) 
+                                VALUES(now(),".$TOTAL.",".$TOTAL.",'".$FECHA_ENTRE."',".$IDCLINIC.",".$iduser.")";
     $respuesta = mysqli_query($con,$query);
     ////OBTENER EL ID DE LA BOLETA INGRESADA
     $query2 = "SELECT LAST_INSERT_ID() AS IDMAX FROM boleta  WHERE idusuario_creador=".$iduser."";
@@ -25,7 +25,7 @@ if(isset($_REQUEST['contenedor_clinicas'])){
     
 
     /////INSERTAR LOS DETALLES
-    $queryInsert = 'INSERT INTO detalle_boleta(cantidad,sub_total,descripcion,idproducto,precio_unidad,idvoleta,tono_color) VALUES';
+    $queryInsert = 'INSERT INTO detalle_boleta(cantidad,sub_total,descripcion,idproducto,precio_unidad,idvoleta,tono_color,mod_ant_cub) VALUES';
     for ($i=1; $i <=$NUM_ELEMENT ; $i++) {
         $temp_canti =  $_POST['cantidad'.$i];
         $temp_subtotal =  $_POST['subtotal'.$i];
@@ -33,8 +33,16 @@ if(isset($_REQUEST['contenedor_clinicas'])){
         $temp_decrip=  $_POST['descripcion'.$i];
         $temp_idpro=  $_POST['producto'.$i];
         $temp_precioU=  $_POST['precioU'.$i];
+        $temp_Opciones = isset($_POST['opciones'.$i]) ? $_POST['opciones'.$i] : [];
+        // Modificar la cadena según los valores seleccionados
+    $estados = "000";
+    //print_r($temp_Opciones); 
+    if (in_array("M", $temp_Opciones)) $estados[0] = '1';
+    if (in_array("A", $temp_Opciones)) $estados[1] = '1';
+    if (in_array("C", $temp_Opciones)) $estados[2] = '1';
+    var_dump($temp_canti, $temp_subtotal, $temp_decrip, $temp_idpro, $temp_precioU, $row2['IDMAX'], $temp_color, $estados);
 
-        $query_elemntos = "(".$temp_canti.",".$temp_subtotal.",'".$temp_decrip."',".$temp_idpro.",".$temp_precioU.",".$row2['IDMAX'].",".$temp_color."),";
+    $query_elemntos = "($temp_canti, $temp_subtotal, '$temp_decrip', $temp_idpro, $temp_precioU, ".$row2['IDMAX'].", $temp_color, '$estados'),";
         $queryInsert = $queryInsert.$query_elemntos;
     }
     $queryInsert=substr($queryInsert, 0, -1);
@@ -51,12 +59,11 @@ if (isset($_REQUEST['idBole'])) {
 
     include_once 'conect.php';
     $con =mysqli_connect($host,$user_db,$contra_db,$db);
-    $queryBOLE = "SELECT idboleta,DATE_FORMAT(fecha_crea, '%d-%m-%Y %H:%i:%s')f_crea,precio_total,estado_pago,deuda,estado_entrega,DATE_FORMAT(fecha_entrega, '%d-%m-%Y') AS fentrega ,b.idclinica,b.idusuario_creador,b.idodontologo,
-	c.nombre_cli,c.telefono_cli,c.direccion_cli,c.referencia_cli,c.ruc_cli,o.nombre_odo,o.telefono,o.dni_odo,o.ruc_odonto,
+    $queryBOLE = "SELECT idboleta,DATE_FORMAT(fecha_crea, '%d-%m-%Y %H:%i:%s')f_crea,precio_total,estado_pago,deuda,estado_entrega,DATE_FORMAT(fecha_entrega, '%d-%m-%Y') AS fentrega ,b.idcliente,b.idusuario_creador,
+	c.nombre_cli,c.telefono_cli,c.direccion,c.documento,
     u.nombre_usuario,tu.ctipouser
     FROM boleta b
-    inner JOIN clinica c 	ON c.idclinica 		= b.idclinica
-    inner JOIN odontologo o 	ON o.idodontologo 	= b.idodontologo
+    inner JOIN cliente c 	ON c.idcliente 		= b.idcliente
     inner JOIN usuario u 	ON u.idusuario 		= b.idusuario_creador
     inner JOIN tipo_usuario tu ON tu.idtipo_usuario = u.tipo_usuario 
     where idboleta = $IDBOLE";
@@ -80,12 +87,10 @@ if (isset($_REQUEST['idBole'])) {
     
     <section class="content-header">
         <div class="container-fluid">
-            <div class="row mb-2">
+            <div class="row ">
                 <ul class="list-inline">
                     <li class="list-inline-item"><span class="badge badge-warning"><h5>C-<?php echo $row['idboleta'];?></h5></span></li>
-                    <li class="list-inline-item"><h5><span class="badge badge-white"><h7>Clinica: </h7></span><?php echo strtoupper($row['nombre_cli']);?></H5></li>
-                    <li class="list-inline-item"><h5><span class="badge badge-white"><h7>Odontologo: </h7></span><?php echo strtoupper($row['nombre_odo']);?></H5></li>
-                </ul>    
+                    <li class="list-inline-item"><h5><span class="badge badge-white"><h7>Cliente: </h7></span><?php echo strtoupper($row['nombre_cli']);?></H5></li>                </ul>    
             </div>
         </div><!-- /.container-fluid -->
         </section>
@@ -205,7 +210,7 @@ if (isset($_REQUEST['idBole'])) {
             <?php  
                 include_once 'conect.php';
                 $con =mysqli_connect($host,$user_db,$contra_db,$db);
-                $queryDETA = "SELECT cantidad, descripcion, sub_total, pro.nombre_pro,precio_unidad,ton.ctono
+                $queryDETA = "SELECT cantidad, descripcion, sub_total, pro.nombre_pro,precio_unidad,deta.mod_ant_cub,ton.ctono,deta.iddetalle_boleta,deta.tono_color
                 FROM detalle_boleta deta
                 INNER JOIN producto pro 	ON deta.idproducto = pro.idproducto
                 INNER JOIN tono_color ton   on deta.tono_color = ton.idtono_color  
@@ -226,6 +231,7 @@ if (isset($_REQUEST['idBole'])) {
                 <th>Nombre</th>
                 <th>Tono</th>
                 <th>Detalle</th>
+                <th>Adicio</th>
                 <th>Precio</th>
                 <th style="width: 15%;">Sub total</th>
             </tr>
@@ -233,13 +239,37 @@ if (isset($_REQUEST['idBole'])) {
         <tbody>
             <?php    
             $tot = 0; // Inicializa la variable total
-            while ($rowDETA = mysqli_fetch_assoc($respuestaDETA)) {           
+            while ($rowDETA = mysqli_fetch_assoc($respuestaDETA)) {
+                $estados = str_split($rowDETA['mod_ant_cub']); // Convertir "000" en array ['0', '0', '0']
+        
             ?>
             <tr>
+            <?php
+$detalleParams = "editarDetalle(" . 
+    (int)$rowDETA['iddetalle_boleta'] . ", " . 
+    "'" . addslashes(htmlspecialchars($rowDETA['nombre_pro'])) . "', " . 
+    (int)$rowDETA['cantidad'] . ", " . 
+    "'" . addslashes(htmlspecialchars($rowDETA['descripcion'])) . "', " . 
+    (float)$rowDETA['precio_unidad'] . ", " . 
+    (float)$rowDETA['sub_total'] . ", " . 
+    "'" . addslashes($rowDETA['mod_ant_cub']) . "', " . 
+    (int)$rowDETA['tono_color'] . 
+")";
+?>
                 <td><?php echo $rowDETA['cantidad'] ?></td>
                 <td style="word-wrap: break-word; word-break: break-word;"><?php echo $rowDETA['nombre_pro'] ?></td>
-                <td style="word-wrap: break-word; word-break: break-word;"><?php echo $rowDETA['ctono'] ?></td>
-                <td style="word-wrap: break-word; word-break: break-word;"><?php echo $rowDETA['descripcion'] ?></td>
+                <td style="word-wrap: break-word; word-break: break-word;" onclick="<?php echo $detalleParams; ?>">
+                    <?php echo $rowDETA['ctono'] ?>
+                </td>
+                <td style="word-wrap: break-word; word-break: break-word;" onclick="<?php echo $detalleParams; ?>">
+
+                    <?php echo $rowDETA['descripcion'] ?></td>
+                <td onclick="<?php echo $detalleParams; ?>" style="display: flex; align-items: center; gap: 5px; white-space: normal; flex-wrap: wrap; border-right: none;font-size: 15px;">
+                    <?php if ($estados[0] == '1') echo '<span><input type="checkbox" disabled checked> MD</span>'; ?>
+                    <?php if ($estados[1] == '1') echo '<span><input type="checkbox" disabled checked> AT</span>'; ?>
+                    <?php if ($estados[2] == '1') echo '<span><input type="checkbox" disabled checked> CB</span>'; ?>
+                </td>
+
                 <td><?php echo $rowDETA['precio_unidad'] ?></td>
                 <td><?php echo $rowDETA['sub_total'] ?></td>
             </tr>
@@ -247,6 +277,7 @@ if (isset($_REQUEST['idBole'])) {
             <tr>
                 <td></td>
                 <td><strong>TOTAL</strong></td>
+                <td></td>
                 <td></td>
                 <td></td>
                 <td></td>

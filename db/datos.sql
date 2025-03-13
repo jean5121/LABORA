@@ -53,19 +53,23 @@ INSERT INTO `producto` (`idproducto`, `nombre_pro`, `precio_promedio`, `estado_p
 (3, 'CORONA/PUENTE ZIRCONIO', 270, 1, 1.5),
 (666, 'asdjfjhgh', 270, 0, 1.5);
 
-INSERT INTO `clinica` (`idclinica`, `nombre_cli`, `telefono_cli`, `direccion_cli`, `referencia_cli`, `estado_cli`) VALUES
-(1, 'FELICIUM CLINIC', '985754213', 'JR. Candelaria 452', 'Una esquina antes del tobogan', 1),
-(2, 'VITALY', '987456218', 'AV. TACNA 894 SEGUNDO PISO', 'DENTO DEL EDIFICIO AZUL', 1),
-(666, 'adsfdasf', '985754213', 'sdfasdfasdf', 'asdfasdfd', 1);
+INSERT INTO `cliente` (`idcliente`, `nombre_cli`, `telefono_cli`, `direccion`, `estado_cli`,`documento`,`idtipo_cliente`) VALUES
+(1, 'FELICIUM CLINIC', '985754213', 'JR. Candelaria 452', 1,'1231231233',1),
+(2, 'VITALY', '987456218', 'AV. TACNA 894 SEGUNDO PISO', 1,'1231231234',1),
+(666, 'jean carlos carrasco cutisaca', '985754213', 'FERRICARRIL 319', 1,'74067665',2);
 
 INSERT INTO `usuario` (`idusuario`, `nombre_usuario`, `usuario`, `contrasena`, `estado_usu`, `tipo_usuario`) VALUES
 (1, 'Jean Carlos Carrasco Cutisaca', 'admin', 'admin', 1, 1),
 (2, 'juana magdalena', 'juan', '12345', 1, 2);
 
 --
+INSERT into tipo_cliente (`idtipo_cliente`,`ctipo_client`,`vigente_cli`) VALUES
+(1,'Clinica',1),
+(2,'Odontologo',1)
 
 --
 INSERT into tono_color (ctono) VALUES 
+('NULO')
 ('BL1'),
 ('BL2'),
 ('BL3'),

@@ -18,14 +18,13 @@
     include_once 'conect.php';
     $con =mysqli_connect($host,$user_db,$contra_db,$db);
     $queryBOLE = "SELECT idboleta,DATE_FORMAT(fecha_crea, '%d-%m-%Y %H:%i:%s')f_crea,precio_total,estado_pago
-    ,deuda,estado_entrega,DATE_FORMAT(fecha_entrega, '%d-%m-%Y') AS fentrega ,b.idclinica,b.idusuario_creador,b.idodontologo,
-	c.nombre_cli,c.telefono_cli,c.direccion_cli,c.referencia_cli,c.ruc_cli,o.nombre_odo,o.telefono,o.dni_odo,o.ruc_odonto,
+    ,deuda,estado_entrega,DATE_FORMAT(fecha_entrega, '%d-%m-%Y') AS fentrega ,b.idcliente,b.idusuario_creador,
+	c.nombre_cli,c.telefono_cli,c.direccion,c.documento,
     u.nombre_usuario,tu.ctipouser
     FROM boleta b
-    inner JOIN clinica c 	ON c.idclinica 		= b.idclinica
-    inner JOIN odontologo o 	ON o.idodontologo 	= b.idodontologo
-    inner JOIN usuario u 	ON u.idusuario 		= b.idusuario_creador
-    inner JOIN tipo_usuario tu ON tu.idtipo_usuario = u.tipo_usuario
+    inner JOIN cliente c 	    ON c.idcliente 		= b.idcliente
+    inner JOIN usuario u 	    ON u.idusuario 		= b.idusuario_creador
+    inner JOIN tipo_usuario tu  ON tu.idtipo_usuario = u.tipo_usuario
     where idboleta = $bol";
     $respuesta = mysqli_query($con,$queryBOLE);
     $row = mysqli_fetch_assoc($respuesta);
@@ -36,10 +35,9 @@
         <pre>
 BOLETA C-<?php echo $bol;?><?php echo PHP_EOL; ?>
 FECHA ENTREGA:<?php echo $row['fentrega'];?> <?php echo PHP_EOL; ?>
-Clinic:<?php echo $row['nombre_cli']."(".$row['telefono_cli'].")"."(".$row['direccion_cli'].")";?>
+Cliente:<?php echo $row['nombre_cli']."(".$row['telefono_cli'].")"."(".$row['direccion'].")";?>
 <?php echo PHP_EOL; ?>
-Client:<?php echo $row['nombre_odo']."(".$row['telefono'].")";;?> <?php echo PHP_EOL; ?>
-<?php echo PHP_EOL; ?>
+
 --------------------
 <?php    
 

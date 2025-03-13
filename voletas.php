@@ -58,8 +58,7 @@
                     <th>COD</th>
                     <th>CREACION</th>
                     <th>ENTREGA</th>
-                    <th>CLINICA</th>
-                    <th>ODONTOLOG</th>                    
+                    <th>CLIENTE</th>
                     <th>DEUDA</th>
                     <th>ESTADO</th>                 
                   </tr>
@@ -68,10 +67,9 @@
               <?php  
               include_once 'conect.php';
               $con =mysqli_connect($host,$user_db,$contra_db,$db);
-              $queryGENE = "SELECT idboleta,deuda,estado_entrega,estado_pago,DATE_FORMAT(fecha_crea, '%d-%m-%Y %H:%i:%s')f_crea,DATE_FORMAT(fecha_entrega, '%d-%m-%Y') AS fentrega,precio_total,c.nombre_cli,o.nombre_odo
+              $queryGENE = "SELECT idboleta,deuda,estado_entrega,estado_pago,DATE_FORMAT(fecha_crea, '%d-%m-%Y %H:%i:%s')f_crea,DATE_FORMAT(fecha_entrega, '%d-%m-%Y') AS fentrega,precio_total,c.nombre_cli
                             FROM `boleta` b
-                            INNER JOIN 	clinica c 		ON	b.idclinica 	= c.idclinica
-                            INNER JOIN	odontologo o 	ON	b.idodontologo	= o.idodontologo
+                            INNER JOIN 	cliente c 		ON	b.idcliente 	= c.idcliente
                             WHERE (fecha_crea BETWEEN DATE_SUB(now(), INTERVAL 4 MONTH) AND now()) OR (b.estado_pago=0)ORDER BY fecha_crea DESC;";
               $respuestaGENE = mysqli_query($con,$queryGENE);
               while ($rowGENE=mysqli_fetch_assoc($respuestaGENE)) {
@@ -96,7 +94,6 @@
                     <td><?php echo $fecha.'<br>'.$hora ?></td>
                     <td>E-<?php echo $rowGENE['fentrega'] ?></td>
                     <td><?php echo $rowGENE['nombre_cli'] ?></td>
-                    <td><?php echo $rowGENE['nombre_odo'] ?></td>
                     <td><?php echo $rowGENE['deuda'] ?> de <?php echo $rowGENE['precio_total'] ?></td>
                     <td>
                     <div style="position: relative;"> 

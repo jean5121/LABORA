@@ -1,6 +1,18 @@
 <!DOCTYPE html>
 <html lang="es">
+<style>
+    .mini-checkboxes label {
+        font-size: 12px; /* Letra pequeña */
+        margin-right: 5px; /* Espaciado entre checks */
+        display: inline-flex;
+        align-items: center;
+    }
 
+    .mini-checkboxes input {
+        transform: scale(0.8); /* Reduce el tamaño de los checkboxes */
+        margin-right: 2px; /* Espaciado entre checkbox y texto */
+    }
+</style>
 <?php 
   session_start();
   if(isset($_SESSION['id'])==false){
@@ -221,6 +233,7 @@ WHERE
 <script src="plugins/jquery/jquery.min.js"></script>
 <!-- jQuery UI 1.11.4 -->
 <script src="plugins/jquery-ui/jquery-ui.min.js"></script>
+
 <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
 <script>
   $.widget.bridge('uibutton', $.ui.button)

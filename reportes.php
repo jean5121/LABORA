@@ -56,7 +56,7 @@
                   </div>
               </div>
               <div class="card-body">
-                <div id="line-chart" style="height: 300px;"></div>
+                <div id="line-chart" style ="height: 300px;"></div>
               </div>
               <!-- /.card-body-->
             </div>
@@ -64,26 +64,68 @@
 
             <!-- Area chart -->
             <div class="card card-primary card-outline">
-              <div class="card-header">
-                <h3 class="card-title">
-                  <i class="far fa-chart-bar"></i>
-                  Area Chart
-                </h3>
+    <div class="card-header">
+        <h3 class="card-title">
+            <i class="far fa-chart-bar"></i> Deudas Por Cliente
+        </h3>
+        <div class="card-tools">
+            <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                <i class="fas fa-minus"></i>
+            </button>
+            <button type="button" class="btn btn-tool" data-card-widget="remove">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+    </div>
+    <div class="card-body">
+        <div id="area-chart" style="height: auto;" class="full-width-chart">
+            <div class="table-responsive"> <!-- ✅ Agregado -->
+                <table class="table table-sm table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Cliente</th>
+                            <th>Deuda Pen.</th>
+                            <th>Opciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php  
+                        include_once 'conect.php';
+                        $con = mysqli_connect($host, $user_db, $contra_db, $db);
+                        $queryDETA = "SELECT cl.idcliente, cl.nombre_cli, SUM(bl.precio_total - bl.deuda) AS monto_total
+                                      FROM boleta bl
+                                      JOIN cliente cl ON bl.idcliente = cl.idcliente
+                                      GROUP BY cl.idcliente, cl.nombre_cli
+                                      ORDER BY monto_total DESC;";   
+                        $respuestaDETA = mysqli_query($con, $queryDETA);
 
-                <div class="card-tools">
-                  <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                    <i class="fas fa-minus"></i>
-                  </button>
-                  <button type="button" class="btn btn-tool" data-card-widget="remove">
-                    <i class="fas fa-times"></i>
-                  </button>
-                </div>
-              </div>
-              <div class="card-body">
-                <div id="area-chart" style="height: 338px;" class="full-width-chart"></div>
-              </div>
-              <!-- /.card-body-->
-            </div>
+                        while ($rowDETA = mysqli_fetch_assoc($respuestaDETA)) {
+                        ?>
+                        <tr>
+                            <td><?php echo $rowDETA['nombre_cli']; ?></td>
+                            <td style="word-wrap: break-word; word-break: break-word;"><?php echo $rowDETA['monto_total']; ?></td>
+                            <td style="word-wrap: break-word; word-break: break-word;">
+                            <form action="deudas.php" method="POST" style="display:inline;">
+                                <input type="hidden" name="idcliente" value="<?php echo $rowDETA['idcliente']; ?>">
+                                <button type="submit" class="btn btn-sm btn-outline-success">
+                                    <i class="fas fa-print"></i> Detalles
+                                </button>
+                            </form>
+                            </td>
+                        </tr>
+                        <?php } ?>
+                        <tr>
+                          <td><strong>TOTAL</strong></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div> <!-- ✅ Fin de `table-responsive` -->
+        </div>
+    </div>
+</div>
+
             <!-- /.card -->
 
           </div>
@@ -165,6 +207,7 @@
                 <thead class="thead-dark">
                     <tr>
                         <th>CLINICA</th>
+                        <th>MONTO</th>
                         <th>CANTIDAD DE PEIZAS</th>
                         <th>PORCENTAJE</th>
                     </tr>
@@ -175,6 +218,7 @@
                 <tfoot class="thead-dark">
             <tr>
                 <th>Total</th>
+                <th id="totalmonto"></th>
                 <th id="totalPiezas"></th>
                 <th id="totalPorcentaje"></th>
             </tr>
@@ -321,10 +365,9 @@ function mostrar_barras_borrar(A,M) {
         }
     });
 }
+
 function mostrar_Donas_borrar(A,M) {
     // Creamos una variable para almacenar los datos JSON
-
-
     // Realizamos la solicitud AJAX para obtener los datos
     $.ajax({
         url: "funciones.php",  // La URL del servidor
@@ -339,6 +382,7 @@ function mostrar_Donas_borrar(A,M) {
             return {
                 label: item.nombre_cli,        // Nombre del cliente
                 data: parseFloat(item.monto_total), // Monto total como número
+                canti: parseInt(item.cantidad),
                 color:color // Color aleatorio
             };
         });
@@ -365,7 +409,9 @@ function mostrar_Donas_borrar(A,M) {
 // Limpiar el cuerpo de la tabla
 $('#tabladetallesdona tbody').empty();
 // Calcular el total y agregar filas a la tabla
-var total = donutData.reduce((sum, item) => sum + item.data, 0);
+var total       = donutData.reduce((sum, item) => sum + item.data, 0);
+var totalpieza  = donutData.reduce((sum, item) => sum + item.canti, 0);
+
     donutData.forEach(function(item) {
         var percentage = ((item.data / total) * 100).toFixed(1); // Calcular el porcentaje
 
@@ -376,6 +422,7 @@ var total = donutData.reduce((sum, item) => sum + item.data, 0);
         var newRow = '<tr>' +
                     '<td>' + colorCircle + item.label + '</td>' +
                     '<td>' + item.data + '</td>' +
+                    '<td>' + item.canti + '</td>' +
                     '<td>' + percentage + '%</td>' +
                     '</tr>';
 
@@ -383,8 +430,9 @@ var total = donutData.reduce((sum, item) => sum + item.data, 0);
         $('#tabladetallesdona tbody').append(newRow);
     });
 
-    // Mostrar el total en la fila de pie de tabla
-    $('#totalPiezas').text(total);
+    // Mostrar el total en la fila de pie de tabla 
+    $('#totalmonto').text(total);
+    $('#totalPiezas').text(totalpieza);
     $('#totalPorcentaje').text('100%'); // El porcentaje total es siempre 100%
 
         },
@@ -539,31 +587,9 @@ $(document).ready(function() {
      * FULL WIDTH STATIC AREA CHART
      * -----------------
      */
-    var areaData = [[2, 88.0], [3, 93.3], [4, 102.0], [5, 108.5], [6, 115.7], [7, 115.6],
-      [8, 124.6], [9, 130.3], [10, 134.3], [11, 141.4], [12, 146.5], [13, 151.7], [14, 159.9],
-      [15, 165.4], [16, 167.8], [17, 168.7], [18, 169.5], [19, 168.0]]
-    $.plot('#area-chart', [areaData], {
-      grid  : {
-        borderWidth: 0
-      },
-      series: {
-        shadowSize: 0, // Drawing is faster without shadows
-        color     : '#00c0ef',
-        lines : {
-          fill: true //Converts the line chart to area chart
-        },
-      },
-      yaxis : {
-        show: false
-      },
-      xaxis : {
-        show: false
-      }
-    })
 
     
 // Llamar a la función para actualizar detalles
-updateDetails();
     /*
      * END DONUT CHART
      */

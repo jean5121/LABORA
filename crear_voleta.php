@@ -50,7 +50,7 @@ S
                   <div class="row gx-3 gy-3">
                       <!-- Clínica -->
                       <div class="form-group col-12 col-sm-6 col-md-4">
-                          <label>CLINICA :</label>
+                          <label>CLIENTE :</label>
                           <select id="contenedor_clinicas" name="contenedor_clinicas" required class="form-control select2 select2-success" style="width: 100%;">
                           </select>
                       </div>
@@ -74,14 +74,14 @@ S
                           </div>
                       </div>
                   </div>
-                  <div class="row gx-3 gy-3">
-                      <!-- Odontólogo -->
+                  <!--<div class="row gx-3 gy-3">
+                      
                       <div class="form-group col-12 col-sm-6 col-md-4">
                           <label>ODONTOLOGO :</label>
                           <select id="contenedor_odontologo" name="contenedor_odontologo" required class="form-control select2 select2-success" style="width: 100%;">
                           </select>
                       </div>
-                  </div>
+                  </div>-->
                   <div class="divider py-1 card card-info"></div>
               </div>
 
